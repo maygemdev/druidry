@@ -16,6 +16,10 @@
 
 package in.zapr.druid.druidry.query.scan;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -27,15 +31,11 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import in.zapr.druid.druidry.query.config.Interval;
 import in.zapr.druid.druidry.dataSource.TableDataSource;
 import in.zapr.druid.druidry.dimension.enums.OutputType;
 import in.zapr.druid.druidry.filter.DruidFilter;
 import in.zapr.druid.druidry.filter.SelectorFilter;
+import in.zapr.druid.druidry.query.config.Interval;
 import in.zapr.druid.druidry.virtualColumn.ExpressionVirtualColumn;
 
 public class DruidScanQueryTest {
@@ -106,7 +106,6 @@ public class DruidScanQueryTest {
 
         String actualJson = objectMapper.writeValueAsString(query);
         JSONAssert.assertEquals(expectedJsonAsString, actualJson, JSONCompareMode.NON_EXTENSIBLE);
-
     }
 
     @Test
