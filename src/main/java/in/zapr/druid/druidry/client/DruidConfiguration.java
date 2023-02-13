@@ -90,7 +90,7 @@ public class DruidConfiguration {
         this.concurrentConnectionsRequired = concurrentConnectionsRequired;
     }
 
-    protected String getUrl() {
+    public String getUrl() {
 
         String endpoint = this.getEndpoint();
         if (endpoint == null) {
