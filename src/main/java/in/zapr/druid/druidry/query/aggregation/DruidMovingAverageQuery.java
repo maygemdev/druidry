@@ -32,6 +32,7 @@ import in.zapr.druid.druidry.postAggregator.DruidPostAggregator;
 import in.zapr.druid.druidry.query.QueryType;
 import in.zapr.druid.druidry.query.config.Context;
 import in.zapr.druid.druidry.query.config.Interval;
+import in.zapr.druid.druidry.query.config.spec.QuerySegmentSpec;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -57,7 +58,7 @@ public class DruidMovingAverageQuery extends DruidAggregationQuery {
                                     @NonNull List<DruidAggregator> aggregations,
                                     List<DruidPostAggregator> postAggregations,
                                     HavingSpec having,
-                                    @NonNull List<Interval> intervals,
+                                    @NonNull QuerySegmentSpec intervals,
                                     Context context,
                                     @NonNull List<DruidAverager> averagers,
                                     List<DruidPostAggregator> postAveragers) {

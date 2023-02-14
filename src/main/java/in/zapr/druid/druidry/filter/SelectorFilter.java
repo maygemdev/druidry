@@ -16,8 +16,9 @@
 
 package in.zapr.druid.druidry.filter;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import in.zapr.druid.druidry.extractionFunctions.ExtractionFunction;
 import java.util.Optional;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
@@ -30,9 +31,11 @@ public class SelectorFilter extends DruidFilter {
 
     private String dimension;
     private Object value;
+    @JsonProperty("extractionFn")
+    private ExtractionFunction extractionFunction;
 
     private SelectorFilter(@NonNull String dimension) {
-        this.type = SELECTOR_DRUID_FILTER_TYPE;
+        type = SELECTOR_DRUID_FILTER_TYPE;
         this.dimension = dimension;
     }
 
@@ -56,5 +59,25 @@ public class SelectorFilter extends DruidFilter {
         if (value.isPresent()) {
             this.value = value.get();
         }
+    }
+
+    public SelectorFilter(@NonNull String dimension, String value, ExtractionFunction extractionFunction) {
+        this(dimension, value);
+        this.extractionFunction = extractionFunction;
+    }
+
+    public SelectorFilter(@NonNull String dimension, Integer value, ExtractionFunction extractionFunction) {
+        this(dimension, value);
+        this.extractionFunction = extractionFunction;
+    }
+
+    public SelectorFilter(@NonNull String dimension, Long value, ExtractionFunction extractionFunction) {
+        this(dimension, value);
+        this.extractionFunction = extractionFunction;
+    }
+
+    public SelectorFilter(@NonNull String dimension, Optional<Object> value, ExtractionFunction extractionFunction) {
+        this(dimension, value);
+        this.extractionFunction = extractionFunction;
     }
 }

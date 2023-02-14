@@ -24,6 +24,7 @@ import java.util.List;
 
 import in.zapr.druid.druidry.query.config.Context;
 import in.zapr.druid.druidry.query.config.Interval;
+import in.zapr.druid.druidry.query.config.spec.QuerySegmentSpec;
 import in.zapr.druid.druidry.aggregator.DruidAggregator;
 import in.zapr.druid.druidry.dataSource.DataSource;
 import in.zapr.druid.druidry.dimension.DruidDimension;
@@ -49,7 +50,7 @@ public class DruidTopNQuery extends DruidAggregationQuery {
 
     @Builder
     private DruidTopNQuery(@NonNull DataSource dataSource,
-                           @NonNull List<Interval> intervals,
+                           @NonNull QuerySegmentSpec intervals,
                            @NonNull Granularity granularity,
                            List<DruidVirtualColumn> virtualColumns,
                            DruidFilter filter,

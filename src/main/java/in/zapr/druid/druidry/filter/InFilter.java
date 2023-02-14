@@ -16,8 +16,9 @@
 
 package in.zapr.druid.druidry.filter;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import in.zapr.druid.druidry.extractionFunctions.ExtractionFunction;
 import java.util.List;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
@@ -29,10 +30,17 @@ public class InFilter extends DruidFilter {
 
     private String dimension;
     private List<String> values;
+    @JsonProperty("extractionFn")
+    private ExtractionFunction extractionFunction;
 
     public InFilter(@NonNull String dimension, @NonNull List<String> values) {
-        this.type = IN_DRUID_FILTER_TYPE;
+        type = IN_DRUID_FILTER_TYPE;
         this.dimension = dimension;
         this.values = values;
+    }
+
+    public InFilter(@NonNull String dimension, @NonNull List<String> values, ExtractionFunction extractionFunction) {
+        this(dimension, values);
+        this.extractionFunction = extractionFunction;
     }
 }
