@@ -18,25 +18,6 @@ package in.zapr.druid.druidry.query.aggregation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import in.zapr.druid.druidry.filter.havingSpec.HavingSpec;
-import in.zapr.druid.druidry.filter.havingSpec.GreaterThanHaving;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import in.zapr.druid.druidry.query.config.Context;
-import in.zapr.druid.druidry.query.config.Interval;
 import in.zapr.druid.druidry.aggregator.CountAggregator;
 import in.zapr.druid.druidry.aggregator.DoubleSumAggregator;
 import in.zapr.druid.druidry.aggregator.DruidAggregator;
@@ -48,6 +29,8 @@ import in.zapr.druid.druidry.filter.AndFilter;
 import in.zapr.druid.druidry.filter.DruidFilter;
 import in.zapr.druid.druidry.filter.OrFilter;
 import in.zapr.druid.druidry.filter.SelectorFilter;
+import in.zapr.druid.druidry.filter.havingSpec.GreaterThanHaving;
+import in.zapr.druid.druidry.filter.havingSpec.HavingSpec;
 import in.zapr.druid.druidry.granularity.Granularity;
 import in.zapr.druid.druidry.granularity.PredefinedGranularity;
 import in.zapr.druid.druidry.granularity.SimpleGranularity;
@@ -59,6 +42,21 @@ import in.zapr.druid.druidry.postAggregator.ArithmeticPostAggregator;
 import in.zapr.druid.druidry.postAggregator.ConstantPostAggregator;
 import in.zapr.druid.druidry.postAggregator.DruidPostAggregator;
 import in.zapr.druid.druidry.postAggregator.FieldAccessPostAggregator;
+import in.zapr.druid.druidry.query.config.Context;
+import in.zapr.druid.druidry.query.config.Interval;
+import in.zapr.druid.druidry.query.config.spec.MultipleIntervalSegmentSpec;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 public class GroupByTest {
     private static ObjectMapper objectMapper;
@@ -162,7 +160,7 @@ public class GroupByTest {
                 .having(countHaving)
                 .aggregators(Arrays.asList(usageAggregator, transferAggregator))
                 .postAggregators(Collections.singletonList(postAggregator))
-                .intervals(Collections.singletonList(interval))
+                .intervals(new MultipleIntervalSegmentSpec(Collections.singletonList(interval)))
                 .build();
 
         String actualJson = objectMapper.writeValueAsString(query);
@@ -184,7 +182,7 @@ public class GroupByTest {
                 .dataSource(new TableDataSource("sample_datasource"))
                 .dimensions(Arrays.asList(druidDimension1, druidDimension2))
                 .granularity(granularity)
-                .intervals(Collections.singletonList(interval))
+                .intervals(new MultipleIntervalSegmentSpec(Collections.singletonList(interval)))
                 .build();
 
         String actualJson = objectMapper.writeValueAsString(druidGroupByQuery);
@@ -231,7 +229,7 @@ public class GroupByTest {
                 .filter(filter)
                 .aggregators(Collections.singletonList(aggregator))
                 .postAggregators(Collections.singletonList(postAggregator))
-                .intervals(Collections.singletonList(interval))
+                .intervals(new MultipleIntervalSegmentSpec(Collections.singletonList(interval)))
                 .context(context)
                 .build();
 

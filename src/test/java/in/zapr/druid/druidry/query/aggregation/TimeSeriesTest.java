@@ -19,22 +19,6 @@ package in.zapr.druid.druidry.query.aggregation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
-import java.util.Arrays;
-import java.util.Collections;
-
-import in.zapr.druid.druidry.query.config.Context;
-import in.zapr.druid.druidry.query.config.Interval;
 import in.zapr.druid.druidry.aggregator.CountAggregator;
 import in.zapr.druid.druidry.aggregator.DoubleSumAggregator;
 import in.zapr.druid.druidry.aggregator.DruidAggregator;
@@ -52,6 +36,20 @@ import in.zapr.druid.druidry.postAggregator.ArithmeticPostAggregator;
 import in.zapr.druid.druidry.postAggregator.ConstantPostAggregator;
 import in.zapr.druid.druidry.postAggregator.DruidPostAggregator;
 import in.zapr.druid.druidry.postAggregator.FieldAccessPostAggregator;
+import in.zapr.druid.druidry.query.config.Context;
+import in.zapr.druid.druidry.query.config.Interval;
+import in.zapr.druid.druidry.query.config.spec.MultipleIntervalSegmentSpec;
+import java.util.Arrays;
+import java.util.Collections;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 public class TimeSeriesTest {
     private static ObjectMapper objectMapper;
@@ -112,7 +110,7 @@ public class TimeSeriesTest {
                 .filter(andFilter)
                 .aggregators(Arrays.asList(aggregator1, aggregator2))
                 .postAggregators(Collections.singletonList(postAggregator))
-                .intervals(Collections.singletonList(interval))
+                .intervals(new MultipleIntervalSegmentSpec(Collections.singletonList(interval)))
                 .build();
 
         String expectedJsonAsString = "{\n" +
@@ -166,7 +164,7 @@ public class TimeSeriesTest {
 
         DruidTimeSeriesQuery seriesQuery = DruidTimeSeriesQuery.builder()
                 .dataSource(new TableDataSource("Matrix"))
-                .intervals(Collections.singletonList(interval))
+                .intervals(new MultipleIntervalSegmentSpec(Collections.singletonList(interval)))
                 .granularity(granularity)
                 .build();
 
@@ -204,7 +202,7 @@ public class TimeSeriesTest {
         DruidTimeSeriesQuery seriesQuery = DruidTimeSeriesQuery.builder()
                 .dataSource(new TableDataSource("Matrix"))
                 .descending(true)
-                .intervals(Collections.singletonList(interval))
+                .intervals(new MultipleIntervalSegmentSpec(Collections.singletonList(interval)))
                 .granularity(granularity)
                 .filter(filter)
                 .aggregators(Collections.singletonList(aggregator))
