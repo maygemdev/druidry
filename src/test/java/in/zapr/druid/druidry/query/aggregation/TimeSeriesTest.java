@@ -16,6 +16,7 @@
 
 package in.zapr.druid.druidry.query.aggregation;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
@@ -57,6 +58,7 @@ public class TimeSeriesTest {
     @BeforeClass
     public void init() {
         objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(Include.NON_EMPTY);
         objectMapper.registerModule(new JodaModule());
         objectMapper.configure(com.fasterxml.jackson.databind.SerializationFeature.
                 WRITE_DATES_AS_TIMESTAMPS, false);
@@ -147,7 +149,7 @@ public class TimeSeriesTest {
                 "      ]\n" +
                 "    }\n" +
                 "  ],\n" +
-                "  \"intervals\": [ \"2012-01-01T00:00:00.000Z/2012-01-03T00:00:00.000Z\" ]\n" +
+                "  \"intervals\": { \"type\":\"intervals\", \"intervals\" : [ \"2012-01-01T00:00:00.000Z/2012-01-03T00:00:00.000Z\" ]}\n" +
                 "}";
 
         String actualJson = objectMapper.writeValueAsString(query);
@@ -172,11 +174,15 @@ public class TimeSeriesTest {
         dataSource.put("type", "table");
         dataSource.put("name", "Matrix");
 
+        JSONObject intervalSpec = new JSONObject();
+        intervalSpec.put("type", "intervals");
+        intervalSpec.put("intervals", new JSONArray(Collections
+                .singletonList("2013-07-14T00:00:00.000Z/2013-11-16T00:00:00.000Z")));
+
         JSONObject expectedQuery = new JSONObject();
         expectedQuery.put("queryType", "timeseries");
         expectedQuery.put("dataSource", dataSource);
-        expectedQuery.put("intervals", new JSONArray(Collections
-                .singletonList("2013-07-14T00:00:00.000Z/2013-11-16T00:00:00.000Z")));
+        expectedQuery.put("intervals", intervalSpec);
         expectedQuery.put("granularity", "day");
 
         String actualJson = objectMapper.writeValueAsString(seriesQuery);
@@ -215,7 +221,6 @@ public class TimeSeriesTest {
         expectedFilter.put("type", "selector");
         expectedFilter.put("dimension", "Spread");
         expectedFilter.put("value", "Peace");
-
         JSONObject expectedAggregator = new JSONObject();
         expectedAggregator.put("type", "count");
         expectedAggregator.put("name", "Chill");
@@ -232,11 +237,15 @@ public class TimeSeriesTest {
         dataSource.put("type", "table");
         dataSource.put("name", "Matrix");
 
+        JSONObject intervalSpec = new JSONObject();
+        intervalSpec.put("type", "intervals");
+        intervalSpec.put("intervals", new JSONArray(Collections
+                .singletonList("2013-07-14T00:00:00.000Z/2013-11-16T00:00:00.000Z")));
+
         JSONObject expectedQuery = new JSONObject();
         expectedQuery.put("queryType", "timeseries");
         expectedQuery.put("dataSource", dataSource);
-        expectedQuery.put("intervals", new JSONArray(Collections
-                .singletonList("2013-07-14T00:00:00.000Z/2013-11-16T00:00:00.000Z")));
+        expectedQuery.put("intervals", intervalSpec);
         expectedQuery.put("granularity", "day");
         expectedQuery.put("limit", 5);
         expectedQuery.put("aggregations", new JSONArray(Collections.singletonList(expectedAggregator)));

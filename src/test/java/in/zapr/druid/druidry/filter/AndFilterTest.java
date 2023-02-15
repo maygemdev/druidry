@@ -16,9 +16,10 @@
 
 package in.zapr.druid.druidry.filter;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import java.util.Arrays;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,8 +29,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-
 public class AndFilterTest {
 
     private static ObjectMapper objectMapper;
@@ -37,6 +36,7 @@ public class AndFilterTest {
     @BeforeClass
     public void init() {
         objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(Include.NON_EMPTY);
     }
 
     @Test
@@ -51,12 +51,10 @@ public class AndFilterTest {
         selector1.put("type", "selector");
         selector1.put("dimension", "Hello");
         selector1.put("value", "World");
-
         JSONObject selector2 = new JSONObject();
         selector2.put("type", "selector");
         selector2.put("dimension", "Peace");
         selector2.put("value", "Bro");
-
         JSONArray filterJsonArray = new JSONArray(Arrays.asList(selector1, selector2));
 
         JSONObject jsonObject = new JSONObject();

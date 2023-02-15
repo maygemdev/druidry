@@ -16,6 +16,7 @@
 
 package in.zapr.druid.druidry.query.aggregation;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import in.zapr.druid.druidry.aggregator.CountAggregator;
@@ -60,6 +61,7 @@ public class TopNQueryTest {
     @BeforeClass
     public void init() {
         objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(Include.NON_EMPTY);
     }
 
     @Test
@@ -162,9 +164,9 @@ public class TopNQueryTest {
                 "      ]\n" +
                 "    }\n" +
                 "  ],\n" +
-                "  \"intervals\": [\n" +
+                "  \"intervals\": { \"type\":\"intervals\", \"intervals\" : [\n" +
                 "    \"2013-08-31T00:00:00.000Z/2013-09-03T00:00:00.000Z\"\n" +
-                "  ]\n" +
+                "  ]}\n" +
                 "}";
 
         String actualJson = objectMapper.writeValueAsString(query);
@@ -202,8 +204,12 @@ public class TopNQueryTest {
         expectedQuery.put("queryType", "topN");
         expectedQuery.put("dataSource", dataSource);
 
+        JSONObject intervalSpec = new JSONObject();
+        intervalSpec.put("type", "intervals");
+        intervalSpec.put("intervals", new JSONArray(Collections.singletonList("2013-08-31T00:00:00.000Z/2013-09-03T00:00:00.000Z")));
+
         JSONArray array = new JSONArray(Collections.singletonList("2013-08-31T00:00:00.000Z/2013-09-03T00:00:00.000Z"));
-        expectedQuery.put("intervals", array);
+        expectedQuery.put("intervals", intervalSpec);
         expectedQuery.put("granularity", "day");
         expectedQuery.put("dimension", "Demo");
         expectedQuery.put("threshold", 7);
@@ -270,8 +276,11 @@ public class TopNQueryTest {
         JSONObject expectedContext = new JSONObject();
         expectedContext.put("populateCache", true);
 
-        JSONArray array = new JSONArray(Collections.singletonList("2013-08-31T00:00:00.000Z/2013-09-03T00:00:00.000Z"));
-        expectedQuery.put("intervals", array);
+        JSONObject intervalSpec = new JSONObject();
+        intervalSpec.put("type", "intervals");
+        intervalSpec.put("intervals", new JSONArray(Collections.singletonList("2013-08-31T00:00:00.000Z/2013-09-03T00:00:00.000Z")));
+
+        expectedQuery.put("intervals", intervalSpec);
         expectedQuery.put("granularity", "day");
         expectedQuery.put("filter", expectedFilter);
         expectedQuery.put("aggregations", new JSONArray(Collections.singletonList(expectedAggregator)));

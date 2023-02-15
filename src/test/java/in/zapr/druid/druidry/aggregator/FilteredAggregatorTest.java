@@ -16,18 +16,17 @@
 
 package in.zapr.druid.druidry.aggregator;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import in.zapr.druid.druidry.filter.SelectorFilter;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import in.zapr.druid.druidry.filter.SelectorFilter;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class FilteredAggregatorTest {
@@ -37,6 +36,7 @@ public class FilteredAggregatorTest {
     @BeforeClass
     public void init() {
         objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(Include.NON_EMPTY);
     }
 
     @Test
@@ -51,6 +51,7 @@ public class FilteredAggregatorTest {
         filterObject.put("type", "selector");
         filterObject.put("dimension", "dimension");
         filterObject.put("value", "value");
+        filterObject.put("extractionFn", null);
 
         JSONObject aggregationObject = new JSONObject();
         aggregationObject.put("type", "count");

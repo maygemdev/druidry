@@ -16,6 +16,7 @@
 
 package in.zapr.druid.druidry.query.aggregation;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import in.zapr.druid.druidry.aggregator.CountAggregator;
@@ -64,6 +65,7 @@ public class GroupByTest {
     @BeforeClass
     public void init() {
         objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(Include.NON_EMPTY);
     }
 
     @Test
@@ -108,7 +110,7 @@ public class GroupByTest {
                 "      ]\n" +
                 "    }\n" +
                 "  ],\n" +
-                "  \"intervals\": [ \"2012-01-01T00:00:00.000Z/2012-01-03T00:00:00.000Z\" ]\n" +
+                "  \"intervals\": { \"type\":\"intervals\", \"intervals\": [\"2012-01-01T00:00:00.000Z/2012-01-03T00:00:00.000Z\"] }\n" +
                 "}\n";
 
         // Druid dimensions
@@ -195,8 +197,11 @@ public class GroupByTest {
         expectedQuery.put("queryType", "groupBy");
         expectedQuery.put("dataSource", dataSource);
 
-        JSONArray intervalArray = new JSONArray(Collections.singletonList("2012-01-01T00:00:00.000Z/2012-01-03T00:00:00.000Z"));
-        expectedQuery.put("intervals", intervalArray);
+        JSONObject intervalSpec = new JSONObject();
+        intervalSpec.put("type", "intervals");
+        intervalSpec.put("intervals", new JSONArray(Collections.singletonList("2012-01-01T00:00:00.000Z/2012-01-03T00:00:00.000Z")));
+
+        expectedQuery.put("intervals", intervalSpec);
         expectedQuery.put("granularity", "all");
         JSONArray dimensionArray = new JSONArray(Arrays.asList("dim1", "dim2"));
         expectedQuery.put("dimensions", dimensionArray);
@@ -252,8 +257,11 @@ public class GroupByTest {
         JSONObject expectedContext = new JSONObject();
         expectedContext.put("populateCache", true);
 
-        JSONArray intervalArray = new JSONArray(Collections.singletonList("2012-01-01T00:00:00.000Z/" +
-                "2012-01-03T00:00:00.000Z"));
+        JSONObject intervalSpec = new JSONObject();
+        intervalSpec.put("type", "intervals");
+        intervalSpec.put("intervals", new JSONArray(Collections.singletonList("2012-01-01T00:00:00.000Z/" +
+                "2012-01-03T00:00:00.000Z")));
+
         JSONArray dimensionArray = new JSONArray(Arrays.asList("dim1", "dim2"));
 
         JSONObject dataSource = new JSONObject();
@@ -264,7 +272,7 @@ public class GroupByTest {
         expectedQuery.put("queryType", "groupBy");
         expectedQuery.put("dataSource", dataSource);
         expectedQuery.put("dimensions", dimensionArray);
-        expectedQuery.put("intervals", intervalArray);
+        expectedQuery.put("intervals", intervalSpec);
         expectedQuery.put("granularity", "all");
         expectedQuery.put("filter", expectedFilter);
         expectedQuery.put("aggregations", new JSONArray(Collections.singletonList(expectedAggregator)));

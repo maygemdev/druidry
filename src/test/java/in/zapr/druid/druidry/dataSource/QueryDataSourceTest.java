@@ -74,8 +74,11 @@ public class QueryDataSourceTest {
         expectedQuery.put("queryType", "groupBy");
         expectedQuery.put("dataSource", dataSource);
 
-        JSONArray intervalArray = new JSONArray(Collections.singletonList("2012-01-01T00:00:00.000Z/2012-01-03T00:00:00.000Z"));
-        expectedQuery.put("intervals", intervalArray);
+        JSONObject intervalSpec = new JSONObject();
+        intervalSpec.put("type", "intervals");
+        intervalSpec.put("intervals", new JSONArray(Collections.singletonList("2012-01-01T00:00:00.000Z/2012-01-03T00:00:00.000Z")));
+
+        expectedQuery.put("intervals", intervalSpec);
         expectedQuery.put("granularity", "all");
         JSONArray dimensionArray = new JSONArray(Arrays.asList("dim1", "dim2"));
         expectedQuery.put("dimensions", dimensionArray);

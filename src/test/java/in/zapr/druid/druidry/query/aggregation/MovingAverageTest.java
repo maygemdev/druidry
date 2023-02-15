@@ -20,6 +20,7 @@ import static com.google.common.collect.ImmutableList.of;
 import static java.util.Collections.singletonList;
 import static org.testng.Assert.assertTrue;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
 import in.zapr.druid.druidry.aggregator.DoubleSumAggregator;
@@ -60,6 +61,7 @@ public class MovingAverageTest {
     @BeforeClass
     public void init() {
         objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(Include.NON_EMPTY);
     }
 
     @Test

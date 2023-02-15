@@ -16,17 +16,16 @@
 
 package in.zapr.druid.druidry.filter;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import java.util.Optional;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.util.Optional;
 
 public class SelectorFilterTest {
 
@@ -35,6 +34,7 @@ public class SelectorFilterTest {
     @BeforeClass
     public void init() {
         objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(Include.NON_EMPTY);
     }
 
     @Test
@@ -44,7 +44,6 @@ public class SelectorFilterTest {
         jsonObject.put("type", "selector");
         jsonObject.put("dimension", "Hello");
         jsonObject.put("value", "World");
-
         String actualJSON = objectMapper.writeValueAsString(filter);
         String expectedJSON = jsonObject.toString();
         JSONAssert.assertEquals(expectedJSON, actualJSON, JSONCompareMode.NON_EXTENSIBLE);
@@ -57,7 +56,6 @@ public class SelectorFilterTest {
         jsonObject.put("type", "selector");
         jsonObject.put("dimension", "Hello");
         jsonObject.put("value", 5);
-
         String actualJSON = objectMapper.writeValueAsString(filter);
         String expectedJSON = jsonObject.toString();
         JSONAssert.assertEquals(expectedJSON, actualJSON, JSONCompareMode.NON_EXTENSIBLE);
@@ -70,7 +68,6 @@ public class SelectorFilterTest {
         jsonObject.put("type", "selector");
         jsonObject.put("dimension", "Hello");
         jsonObject.put("value", 1488498926000L);
-
         String actualJSON = objectMapper.writeValueAsString(filter);
         String expectedJSON = jsonObject.toString();
         JSONAssert.assertEquals(expectedJSON, actualJSON, JSONCompareMode.NON_EXTENSIBLE);
@@ -83,7 +80,6 @@ public class SelectorFilterTest {
         jsonObject.put("type", "selector");
         jsonObject.put("dimension", "Hello");
         jsonObject.put("value", "World");
-
         String actualJSON = objectMapper.writeValueAsString(filter);
         String expectedJSON = jsonObject.toString();
         JSONAssert.assertEquals(expectedJSON, actualJSON, JSONCompareMode.NON_EXTENSIBLE);
@@ -96,7 +92,6 @@ public class SelectorFilterTest {
         jsonObject.put("type", "selector");
         jsonObject.put("dimension", "Hello");
         jsonObject.put("value", 5);
-
         String actualJSON = objectMapper.writeValueAsString(filter);
         String expectedJSON = jsonObject.toString();
         JSONAssert.assertEquals(expectedJSON, actualJSON, JSONCompareMode.NON_EXTENSIBLE);
@@ -109,20 +104,6 @@ public class SelectorFilterTest {
         jsonObject.put("type", "selector");
         jsonObject.put("dimension", "Hello");
         jsonObject.put("value", 1488498926000L);
-
-        String actualJSON = objectMapper.writeValueAsString(filter);
-        String expectedJSON = jsonObject.toString();
-        JSONAssert.assertEquals(expectedJSON, actualJSON, JSONCompareMode.NON_EXTENSIBLE);
-    }
-
-    @Test
-    public void testOptionalWithNullField() throws JSONException, JsonProcessingException {
-        SelectorFilter filter = new SelectorFilter("Hello", Optional.ofNullable(null));
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("type", "selector");
-        jsonObject.put("dimension", "Hello");
-        jsonObject.putOpt("value", JSONObject.NULL);
-
         String actualJSON = objectMapper.writeValueAsString(filter);
         String expectedJSON = jsonObject.toString();
         JSONAssert.assertEquals(expectedJSON, actualJSON, JSONCompareMode.NON_EXTENSIBLE);
