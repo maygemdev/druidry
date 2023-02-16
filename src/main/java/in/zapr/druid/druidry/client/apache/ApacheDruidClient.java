@@ -19,25 +19,24 @@ import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.support.ClassicRequestBuilder;
 
 import in.zapr.druid.druidry.client.DruidClient;
-import in.zapr.druid.druidry.client.DruidConfiguration;
 import in.zapr.druid.druidry.client.DruidError;
 import in.zapr.druid.druidry.client.DruidException;
 import in.zapr.druid.druidry.client.RuntimeIoException;
 import in.zapr.druid.druidry.query.DruidQuery;
 
 public class ApacheDruidClient implements DruidClient {
-    private final DruidConfiguration config;
+    private final String url;
 
     private final CloseableHttpClient http;
 
     private final ObjectMapper jsonMapper;
 
-    public ApacheDruidClient(DruidConfiguration config) {
-        this(config, HttpClients.createDefault());
+    public ApacheDruidClient(String url) {
+        this(url, HttpClients.createDefault());
     }
 
-    public ApacheDruidClient(DruidConfiguration config, CloseableHttpClient http) {
-        this.config = config;
+    public ApacheDruidClient(String url, CloseableHttpClient http) {
+        this.url = url;
         this.http = http;
         this.jsonMapper = new ObjectMapper();
     }
@@ -55,7 +54,7 @@ public class ApacheDruidClient implements DruidClient {
     public String queryRaw(DruidQuery query) {
         try {
             String body = jsonMapper.writeValueAsString(query);
-            ClassicHttpRequest req = ClassicRequestBuilder.post(config.getUrl())
+            ClassicHttpRequest req = ClassicRequestBuilder.post(url)
                                                           .addHeader(HttpHeaders.ACCEPT, ContentType.APPLICATION_JSON.toString())
                                                           .setEntity(body, ContentType.APPLICATION_JSON)
                                                           .build();
