@@ -34,11 +34,11 @@ public interface DruidClient extends AutoCloseable {
      * See <a href="https://druid.apache.org/docs/latest/querying/querying.html">Druid documentation</a>
      * for more details.
      */
-    String queryRaw(DruidQuery query) throws RuntimeIoException, DruidException;
+    String query(DruidQuery query) throws RuntimeIoException, DruidException;
 
     /**
      * Perform Druid query and return structured response parsed as a target model list.
-     * See also documentation for {@link #queryRaw(DruidQuery)}
+     * See also documentation for {@link #query(DruidQuery)}
      */
-    <T> List<T> query(DruidQuery query) throws RuntimeIoException, DruidException;
+    <T> List<T> query(DruidQuery query, Class<T> clazz) throws RuntimeIoException, DruidException;
 }
