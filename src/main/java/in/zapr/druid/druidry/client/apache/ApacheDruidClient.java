@@ -1,12 +1,14 @@
 package in.zapr.druid.druidry.client.apache;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.commons.lang3.reflect.TypeUtils;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
@@ -51,7 +53,7 @@ public class ApacheDruidClient implements DruidClient {
     }
 
     @Override
-    public String queryRaw(DruidQuery query) {
+    public String query(DruidQuery query) {
         try {
             String body = jsonMapper.writeValueAsString(query);
             ClassicHttpRequest req = ClassicRequestBuilder.post(url)
@@ -82,9 +84,14 @@ public class ApacheDruidClient implements DruidClient {
     }
 
     @Override
-    public <T> List<T> query(DruidQuery query) {
+    public <T> List<T> query(DruidQuery query, Class<T> clazz) {
         try {
-            return jsonMapper.readValue(queryRaw(query), new TypeReference<List<T>>() {});
+            return jsonMapper.readValue(query(query), new TypeReference<List<T>>() {
+                @Override
+                public Type getType() {
+                    return TypeUtils.parameterize(List.class, clazz);
+                }
+            });
         } catch (JsonProcessingException e) {
             throw new RuntimeIoException(e);
         }
