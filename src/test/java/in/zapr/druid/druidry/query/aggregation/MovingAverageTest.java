@@ -20,12 +20,6 @@ import static com.google.common.collect.ImmutableList.of;
 import static java.util.Collections.singletonList;
 import static org.testng.Assert.assertTrue;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
@@ -51,6 +45,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -58,7 +53,6 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.testng.reporters.Files;
 
 public class MovingAverageTest {
 
