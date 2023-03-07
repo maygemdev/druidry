@@ -16,9 +16,11 @@
 
 package in.zapr.druid.druidry.query.aggregation;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -30,11 +32,6 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
-
-import in.zapr.druid.druidry.query.config.Context;
-import in.zapr.druid.druidry.query.config.Interval;
 import in.zapr.druid.druidry.aggregator.CountAggregator;
 import in.zapr.druid.druidry.aggregator.DoubleSumAggregator;
 import in.zapr.druid.druidry.aggregator.DruidAggregator;
@@ -52,6 +49,8 @@ import in.zapr.druid.druidry.postAggregator.ArithmeticPostAggregator;
 import in.zapr.druid.druidry.postAggregator.ConstantPostAggregator;
 import in.zapr.druid.druidry.postAggregator.DruidPostAggregator;
 import in.zapr.druid.druidry.postAggregator.FieldAccessPostAggregator;
+import in.zapr.druid.druidry.query.config.Context;
+import in.zapr.druid.druidry.query.config.Interval;
 
 public class TimeSeriesTest {
     private static ObjectMapper objectMapper;
@@ -59,9 +58,7 @@ public class TimeSeriesTest {
     @BeforeClass
     public void init() {
         objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JodaModule());
-        objectMapper.configure(com.fasterxml.jackson.databind.SerializationFeature.
-                WRITE_DATES_AS_TIMESTAMPS, false);
+        objectMapper.configure(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     }
 
     @Test

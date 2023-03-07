@@ -18,43 +18,27 @@ package in.zapr.druid.druidry.client;
 
 import java.util.List;
 
-import in.zapr.druid.druidry.client.exception.ConnectionException;
-import in.zapr.druid.druidry.client.exception.QueryException;
 import in.zapr.druid.druidry.query.DruidQuery;
 
 public interface DruidClient extends AutoCloseable {
+    /**
+     * Close the client. No more client methods must be called after this method call.
+     */
+    void close() throws RuntimeIoException;
 
     /**
-     * Connects with Druid
+     * Perform Druid query and return raw string response.
      *
-     * @throws ConnectionException When connection is not formed
+     * In case of any client or server error Druid returns code and description withing response.
+     * This information can be read from {@link DruidException}.
+     * See <a href="https://druid.apache.org/docs/latest/querying/querying.html">Druid documentation</a>
+     * for more details.
      */
-    void connect() throws ConnectionException;
+    String query(DruidQuery query) throws RuntimeIoException, DruidException;
 
     /**
-     * Closes connection with Druid
-     *
-     * @throws ConnectionException When connection is not closed
+     * Perform Druid query and return structured response parsed as a target model list.
+     * See also documentation for {@link #query(DruidQuery)}
      */
-    void close() throws ConnectionException;
-
-    /**
-     * Queries druid
-     *
-     * @param druidQuery Druid Query object
-     * @return Result from Druid
-     * @throws QueryException Error while querying
-     */
-    String query(DruidQuery druidQuery) throws QueryException;
-
-    /**
-     * Queries druid
-     *
-     * @param druidQuery Druid Query Object
-     * @param className  Class according to which DruidResult should be converted to
-     * @param <T>        Class according to which DruidResult should be converted to
-     * @return Druid Result in the form of class T object
-     * @throws QueryException Error while querying
-     */
-    <T> List<T> query(DruidQuery druidQuery, Class<T> className) throws QueryException;
+    <T> List<T> query(DruidQuery query, Class<T> clazz) throws RuntimeIoException, DruidException;
 }

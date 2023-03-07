@@ -16,9 +16,14 @@
 
 package in.zapr.druid.druidry.query.aggregation;
 
-import com.google.common.io.Resources;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.io.Resources;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -27,12 +32,6 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.testng.reporters.Files;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 import in.zapr.druid.druidry.aggregator.DoubleSumAggregator;
 import in.zapr.druid.druidry.aggregator.DruidAggregator;
@@ -250,7 +249,7 @@ public class MovingAverageTest {
     private String loadExpectedJson(String fileName) throws IOException, URISyntaxException {
         URI jsonUri = Resources.getResource("query/aggregation/moving_average/" + fileName).toURI();
         File jsonFile = new File(jsonUri);
-        return Files.readFile(jsonFile);
+        return new String(Files.readAllBytes(jsonFile.toPath()));
     }
 
     private static DruidMovingAverageQuery simpleQuery(
