@@ -16,22 +16,9 @@
 
 package in.zapr.druid.druidry.query.aggregation;
 
-import java.util.Arrays;
-import java.util.Collections;
-
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
 import in.zapr.druid.druidry.aggregator.CountAggregator;
 import in.zapr.druid.druidry.aggregator.DoubleSumAggregator;
 import in.zapr.druid.druidry.aggregator.DruidAggregator;
@@ -51,6 +38,18 @@ import in.zapr.druid.druidry.postAggregator.DruidPostAggregator;
 import in.zapr.druid.druidry.postAggregator.FieldAccessPostAggregator;
 import in.zapr.druid.druidry.query.config.Context;
 import in.zapr.druid.druidry.query.config.Interval;
+import in.zapr.druid.druidry.query.config.spec.MultipleIntervalSegmentSpec;
+import java.util.Arrays;
+import java.util.Collections;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 public class TimeSeriesTest {
     private static ObjectMapper objectMapper;
@@ -58,6 +57,7 @@ public class TimeSeriesTest {
     @BeforeClass
     public void init() {
         objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(Include.NON_EMPTY);
         objectMapper.configure(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     }
 
@@ -109,7 +109,7 @@ public class TimeSeriesTest {
                 .filter(andFilter)
                 .aggregators(Arrays.asList(aggregator1, aggregator2))
                 .postAggregators(Collections.singletonList(postAggregator))
-                .intervals(Collections.singletonList(interval))
+                .intervals(new MultipleIntervalSegmentSpec(Collections.singletonList(interval)))
                 .build();
 
         String expectedJsonAsString = "{\n" +
@@ -146,7 +146,7 @@ public class TimeSeriesTest {
                 "      ]\n" +
                 "    }\n" +
                 "  ],\n" +
-                "  \"intervals\": [ \"2012-01-01T00:00:00.000Z/2012-01-03T00:00:00.000Z\" ]\n" +
+                "  \"intervals\": { \"type\":\"intervals\", \"intervals\" : [ \"2012-01-01T00:00:00.000Z/2012-01-03T00:00:00.000Z\" ]}\n" +
                 "}";
 
         String actualJson = objectMapper.writeValueAsString(query);
@@ -163,7 +163,7 @@ public class TimeSeriesTest {
 
         DruidTimeSeriesQuery seriesQuery = DruidTimeSeriesQuery.builder()
                 .dataSource(new TableDataSource("Matrix"))
-                .intervals(Collections.singletonList(interval))
+                .intervals(new MultipleIntervalSegmentSpec(Collections.singletonList(interval)))
                 .granularity(granularity)
                 .build();
 
@@ -171,11 +171,15 @@ public class TimeSeriesTest {
         dataSource.put("type", "table");
         dataSource.put("name", "Matrix");
 
+        JSONObject intervalSpec = new JSONObject();
+        intervalSpec.put("type", "intervals");
+        intervalSpec.put("intervals", new JSONArray(Collections
+                .singletonList("2013-07-14T00:00:00.000Z/2013-11-16T00:00:00.000Z")));
+
         JSONObject expectedQuery = new JSONObject();
         expectedQuery.put("queryType", "timeseries");
         expectedQuery.put("dataSource", dataSource);
-        expectedQuery.put("intervals", new JSONArray(Collections
-                .singletonList("2013-07-14T00:00:00.000Z/2013-11-16T00:00:00.000Z")));
+        expectedQuery.put("intervals", intervalSpec);
         expectedQuery.put("granularity", "day");
 
         String actualJson = objectMapper.writeValueAsString(seriesQuery);
@@ -201,7 +205,7 @@ public class TimeSeriesTest {
         DruidTimeSeriesQuery seriesQuery = DruidTimeSeriesQuery.builder()
                 .dataSource(new TableDataSource("Matrix"))
                 .descending(true)
-                .intervals(Collections.singletonList(interval))
+                .intervals(new MultipleIntervalSegmentSpec(Collections.singletonList(interval)))
                 .granularity(granularity)
                 .filter(filter)
                 .aggregators(Collections.singletonList(aggregator))
@@ -214,7 +218,6 @@ public class TimeSeriesTest {
         expectedFilter.put("type", "selector");
         expectedFilter.put("dimension", "Spread");
         expectedFilter.put("value", "Peace");
-
         JSONObject expectedAggregator = new JSONObject();
         expectedAggregator.put("type", "count");
         expectedAggregator.put("name", "Chill");
@@ -231,11 +234,15 @@ public class TimeSeriesTest {
         dataSource.put("type", "table");
         dataSource.put("name", "Matrix");
 
+        JSONObject intervalSpec = new JSONObject();
+        intervalSpec.put("type", "intervals");
+        intervalSpec.put("intervals", new JSONArray(Collections
+                .singletonList("2013-07-14T00:00:00.000Z/2013-11-16T00:00:00.000Z")));
+
         JSONObject expectedQuery = new JSONObject();
         expectedQuery.put("queryType", "timeseries");
         expectedQuery.put("dataSource", dataSource);
-        expectedQuery.put("intervals", new JSONArray(Collections
-                .singletonList("2013-07-14T00:00:00.000Z/2013-11-16T00:00:00.000Z")));
+        expectedQuery.put("intervals", intervalSpec);
         expectedQuery.put("granularity", "day");
         expectedQuery.put("limit", 5);
         expectedQuery.put("aggregations", new JSONArray(Collections.singletonList(expectedAggregator)));

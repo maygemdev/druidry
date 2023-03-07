@@ -16,25 +16,9 @@
 
 package in.zapr.druid.druidry.query.aggregation;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
-import java.util.Arrays;
-import java.util.Collections;
-
-import in.zapr.druid.druidry.query.config.Context;
-import in.zapr.druid.druidry.query.config.Interval;
 import in.zapr.druid.druidry.aggregator.CountAggregator;
 import in.zapr.druid.druidry.aggregator.DoubleSumAggregator;
 import in.zapr.druid.druidry.aggregator.DruidAggregator;
@@ -53,8 +37,23 @@ import in.zapr.druid.druidry.postAggregator.ArithmeticPostAggregator;
 import in.zapr.druid.druidry.postAggregator.ConstantPostAggregator;
 import in.zapr.druid.druidry.postAggregator.DruidPostAggregator;
 import in.zapr.druid.druidry.postAggregator.FieldAccessPostAggregator;
+import in.zapr.druid.druidry.query.config.Context;
+import in.zapr.druid.druidry.query.config.Interval;
+import in.zapr.druid.druidry.query.config.spec.MultipleIntervalSegmentSpec;
 import in.zapr.druid.druidry.topNMetric.SimpleMetric;
 import in.zapr.druid.druidry.topNMetric.TopNMetric;
+import java.util.Arrays;
+import java.util.Collections;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 public class TopNQueryTest {
     private static ObjectMapper objectMapper;
@@ -62,6 +61,7 @@ public class TopNQueryTest {
     @BeforeClass
     public void init() {
         objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(Include.NON_EMPTY);
     }
 
     @Test
@@ -105,7 +105,7 @@ public class TopNQueryTest {
                 .filter(filter)
                 .aggregators(Arrays.asList(aggregator1, aggregator2))
                 .postAggregators(Collections.singletonList(postAggregator))
-                .intervals(Collections.singletonList(interval))
+                .intervals(new MultipleIntervalSegmentSpec(Collections.singletonList(interval)))
                 .build();
 
         String expectedJsonAsString = "{\n" +
@@ -164,9 +164,9 @@ public class TopNQueryTest {
                 "      ]\n" +
                 "    }\n" +
                 "  ],\n" +
-                "  \"intervals\": [\n" +
+                "  \"intervals\": { \"type\":\"intervals\", \"intervals\" : [\n" +
                 "    \"2013-08-31T00:00:00.000Z/2013-09-03T00:00:00.000Z\"\n" +
-                "  ]\n" +
+                "  ]}\n" +
                 "}";
 
         String actualJson = objectMapper.writeValueAsString(query);
@@ -187,7 +187,7 @@ public class TopNQueryTest {
 
         DruidTopNQuery query = DruidTopNQuery.builder()
                 .dataSource(new TableDataSource("sample_data"))
-                .intervals(Collections.singletonList(interval))
+                .intervals(new MultipleIntervalSegmentSpec(Collections.singletonList(interval)))
                 .granularity(granularity)
                 .dimension(dimension)
                 .threshold(7)
@@ -204,8 +204,12 @@ public class TopNQueryTest {
         expectedQuery.put("queryType", "topN");
         expectedQuery.put("dataSource", dataSource);
 
+        JSONObject intervalSpec = new JSONObject();
+        intervalSpec.put("type", "intervals");
+        intervalSpec.put("intervals", new JSONArray(Collections.singletonList("2013-08-31T00:00:00.000Z/2013-09-03T00:00:00.000Z")));
+
         JSONArray array = new JSONArray(Collections.singletonList("2013-08-31T00:00:00.000Z/2013-09-03T00:00:00.000Z"));
-        expectedQuery.put("intervals", array);
+        expectedQuery.put("intervals", intervalSpec);
         expectedQuery.put("granularity", "day");
         expectedQuery.put("dimension", "Demo");
         expectedQuery.put("threshold", 7);
@@ -234,7 +238,7 @@ public class TopNQueryTest {
 
         DruidTopNQuery query = DruidTopNQuery.builder()
                 .dataSource(new TableDataSource("sample_data"))
-                .intervals(Collections.singletonList(interval))
+                .intervals(new MultipleIntervalSegmentSpec(Collections.singletonList(interval)))
                 .granularity(granularity)
                 .filter(filter)
                 .aggregators(Collections.singletonList(aggregator))
@@ -272,8 +276,11 @@ public class TopNQueryTest {
         JSONObject expectedContext = new JSONObject();
         expectedContext.put("populateCache", true);
 
-        JSONArray array = new JSONArray(Collections.singletonList("2013-08-31T00:00:00.000Z/2013-09-03T00:00:00.000Z"));
-        expectedQuery.put("intervals", array);
+        JSONObject intervalSpec = new JSONObject();
+        intervalSpec.put("type", "intervals");
+        intervalSpec.put("intervals", new JSONArray(Collections.singletonList("2013-08-31T00:00:00.000Z/2013-09-03T00:00:00.000Z")));
+
+        expectedQuery.put("intervals", intervalSpec);
         expectedQuery.put("granularity", "day");
         expectedQuery.put("filter", expectedFilter);
         expectedQuery.put("aggregations", new JSONArray(Collections.singletonList(expectedAggregator)));
@@ -306,7 +313,7 @@ public class TopNQueryTest {
 
         DruidTopNQuery query1 = DruidTopNQuery.builder()
                 .dataSource(new TableDataSource("sample_data"))
-                .intervals(Collections.singletonList(interval))
+                .intervals(new MultipleIntervalSegmentSpec(Collections.singletonList(interval)))
                 .granularity(granularity)
                 .filter(filter)
                 .aggregators(Collections.singletonList(aggregator))
@@ -319,7 +326,7 @@ public class TopNQueryTest {
 
         DruidTopNQuery query2 = DruidTopNQuery.builder()
                 .dataSource(new TableDataSource("sample_data"))
-                .intervals(Collections.singletonList(interval))
+                .intervals(new MultipleIntervalSegmentSpec(Collections.singletonList(interval)))
                 .granularity(granularity)
                 .filter(filter)
                 .aggregators(Collections.singletonList(aggregator))
@@ -353,7 +360,7 @@ public class TopNQueryTest {
 
         DruidTopNQuery query1 = DruidTopNQuery.builder()
                 .dataSource(new TableDataSource("sample_data"))
-                .intervals(Collections.singletonList(interval))
+                .intervals(new MultipleIntervalSegmentSpec(Collections.singletonList(interval)))
                 .granularity(granularity)
                 .filter(filter)
                 .aggregators(Collections.singletonList(aggregator))
@@ -366,7 +373,7 @@ public class TopNQueryTest {
 
         DruidTopNQuery query2 = DruidTopNQuery.builder()
                 .dataSource(new TableDataSource("sample_data"))
-                .intervals(Collections.singletonList(interval))
+                .intervals(new MultipleIntervalSegmentSpec(Collections.singletonList(interval)))
                 .granularity(granularity)
                 .filter(filter)
                 .aggregators(Collections.singletonList(aggregator))
@@ -400,7 +407,7 @@ public class TopNQueryTest {
 
         DruidTopNQuery query1 = DruidTopNQuery.builder()
                 .dataSource(new TableDataSource("sample_data"))
-                .intervals(Collections.singletonList(interval))
+                .intervals(new MultipleIntervalSegmentSpec(Collections.singletonList(interval)))
                 .granularity(granularity)
                 .filter(filter)
                 .aggregators(Collections.singletonList(aggregator))

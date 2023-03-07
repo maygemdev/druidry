@@ -16,23 +16,19 @@
 
 package in.zapr.druid.druidry.query.aggregation;
 
+import static com.google.common.collect.ImmutableList.of;
+import static java.util.Collections.singletonList;
+import static org.testng.Assert.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
-
 import in.zapr.druid.druidry.aggregator.DoubleSumAggregator;
 import in.zapr.druid.druidry.aggregator.DruidAggregator;
 import in.zapr.druid.druidry.averager.DoubleMeanAverager;
@@ -50,10 +46,19 @@ import in.zapr.druid.druidry.postAggregator.DruidPostAggregator;
 import in.zapr.druid.druidry.postAggregator.FieldAccessPostAggregator;
 import in.zapr.druid.druidry.query.config.Context;
 import in.zapr.druid.druidry.query.config.Interval;
-
-import static com.google.common.collect.ImmutableList.of;
-import static java.util.Collections.singletonList;
-import static org.testng.Assert.assertTrue;
+import in.zapr.druid.druidry.query.config.spec.MultipleIntervalSegmentSpec;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+import org.testng.reporters.Files;
 
 public class MovingAverageTest {
 
@@ -62,6 +67,7 @@ public class MovingAverageTest {
     @BeforeClass
     public void init() {
         objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(Include.NON_EMPTY);
     }
 
     @Test
@@ -106,7 +112,7 @@ public class MovingAverageTest {
                 .filter(new SelectorFilter("selectorField", "selectorValue"))
                 .aggregations(singletonList(aggregator))
                 .postAggregations(singletonList(postAggregator))
-                .intervals(singletonList(interval))
+                .intervals(new MultipleIntervalSegmentSpec(singletonList(interval)))
                 .context(context)
                 .averagers(singletonList(averager))
                 .postAveragers(singletonList(postAverager))
@@ -131,7 +137,7 @@ public class MovingAverageTest {
 
         DruidMovingAverageQuery.builder()
                 .granularity(new SimpleGranularity(PredefinedGranularity.FIFTEEN_MINUTE))
-                .intervals(singletonList(interval))
+                .intervals(new MultipleIntervalSegmentSpec(singletonList(interval)))
                 .aggregations(singletonList(aggregator))
                 .averagers(singletonList(averager))
                 .build();
@@ -152,7 +158,7 @@ public class MovingAverageTest {
 
         DruidMovingAverageQuery.builder()
                 .dataSource(new TableDataSource("dataSource"))
-                .intervals(singletonList(interval))
+                .intervals(new MultipleIntervalSegmentSpec(singletonList(interval)))
                 .aggregations(singletonList(aggregator))
                 .averagers(singletonList(averager))
                 .build();
@@ -173,7 +179,7 @@ public class MovingAverageTest {
         DruidMovingAverageQuery.builder()
                 .dataSource(new TableDataSource("dataSource"))
                 .granularity(new SimpleGranularity(PredefinedGranularity.FIFTEEN_MINUTE))
-                .intervals(singletonList(interval))
+                .intervals(new MultipleIntervalSegmentSpec(singletonList(interval)))
                 .averagers(singletonList(averager))
                 .build();
     }
@@ -206,7 +212,7 @@ public class MovingAverageTest {
         DruidMovingAverageQuery.builder()
                 .dataSource(new TableDataSource("dataSource"))
                 .granularity(new SimpleGranularity(PredefinedGranularity.FIFTEEN_MINUTE))
-                .intervals(singletonList(interval))
+                .intervals(new MultipleIntervalSegmentSpec(singletonList(interval)))
                 .aggregations(singletonList(aggregator))
                 .build();
     }
@@ -265,7 +271,7 @@ public class MovingAverageTest {
                 .dataSource(new TableDataSource("simpleDataSource"))
                 .granularity(new SimpleGranularity(PredefinedGranularity.DAY))
                 .aggregations(singletonList(aggregator))
-                .intervals(singletonList(interval))
+                .intervals(new MultipleIntervalSegmentSpec(singletonList(interval)))
                 .averagers(singletonList(averager))
                 .build();
     }

@@ -129,3 +129,5 @@ nbdist/
 hs_err_pid*
 /target/
 /.apt_generated/
+*.orig
+/test-output/*

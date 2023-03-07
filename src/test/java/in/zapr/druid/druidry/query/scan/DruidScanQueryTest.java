@@ -16,13 +16,22 @@
 
 package in.zapr.druid.druidry.query.scan;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import in.zapr.druid.druidry.dataSource.TableDataSource;
+import in.zapr.druid.druidry.dimension.enums.OutputType;
+import in.zapr.druid.druidry.filter.DruidFilter;
+import in.zapr.druid.druidry.filter.SelectorFilter;
+import in.zapr.druid.druidry.query.config.Interval;
+import in.zapr.druid.druidry.virtualColumn.ExpressionVirtualColumn;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.json.JSONException;
@@ -31,19 +40,14 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import in.zapr.druid.druidry.dataSource.TableDataSource;
-import in.zapr.druid.druidry.dimension.enums.OutputType;
-import in.zapr.druid.druidry.filter.DruidFilter;
-import in.zapr.druid.druidry.filter.SelectorFilter;
 import in.zapr.druid.druidry.query.config.Interval;
-import in.zapr.druid.druidry.virtualColumn.ExpressionVirtualColumn;
-
 public class DruidScanQueryTest {
     private static ObjectMapper objectMapper;
 
     @BeforeClass
     public void init() {
         objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(Include.NON_EMPTY);
     }
 
 
