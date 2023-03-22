@@ -26,17 +26,17 @@ import lombok.Getter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class LookUpExtractionFunction extends ExtractionFunction {
 
-    private LookUpSpec lookUp;
+    private LookUpSpec lookup;
     private Boolean retainMissingValue;
     private Boolean injective;
     private String replaceMissingValueWith;
     private Boolean optimize;
 
     @Builder
-    private LookUpExtractionFunction(LookUpSpec lookUp, Boolean retainMissingValue, Boolean injective, String
+    private LookUpExtractionFunction(LookUpSpec lookup, Boolean retainMissingValue, Boolean injective, String
             replaceMissingValueWith, Boolean optimize) {
         this.type = ExtractionFunction.LOOPUP_TYPE;
-        this.lookUp = lookUp;
+        this.lookup = lookup;
         this.retainMissingValue = retainMissingValue;
         this.injective = injective;
         this.replaceMissingValueWith = replaceMissingValueWith;
