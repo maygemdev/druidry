@@ -19,8 +19,10 @@ package in.zapr.druid.druidry.filter;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 @Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 public class RegexFilter extends DruidFilter {
 
@@ -29,8 +31,12 @@ public class RegexFilter extends DruidFilter {
     private String dimension;
     private String pattern;
 
+    public RegexFilter() {
+        type = REGEX_DRUID_FILTER_TYPE;
+    }
+
     public RegexFilter(@NonNull String dimension, @NonNull String pattern) {
-        this.type = REGEX_DRUID_FILTER_TYPE;
+        type = REGEX_DRUID_FILTER_TYPE;
         this.dimension = dimension;
         this.pattern = pattern;
     }

@@ -17,13 +17,17 @@
 package in.zapr.druid.druidry.extractionFunctions;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
 public class StrLenExtractionFunction extends ExtractionFunction {
 
     @Builder
-    private StrLenExtractionFunction() {
-        this.type = ExtractionFunction.STRING_LENGTH_TYPE;
+    public StrLenExtractionFunction() {
+        type = ExtractionFunction.STRING_LENGTH_TYPE;
     }
 }

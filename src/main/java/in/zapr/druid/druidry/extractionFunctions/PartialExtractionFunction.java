@@ -20,16 +20,22 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 @Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 public class PartialExtractionFunction extends ExtractionFunction {
 
     private String expr;
 
+    public PartialExtractionFunction() {
+        type = PARTIAL_TYPE;
+    }
+
     @Builder
     private PartialExtractionFunction(@NonNull String expr) {
-        this.type = PARTIAL_TYPE;
+        type = PARTIAL_TYPE;
         this.expr = expr;
     }
 }

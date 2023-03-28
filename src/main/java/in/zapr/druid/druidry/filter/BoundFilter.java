@@ -40,6 +40,10 @@ public class BoundFilter extends DruidFilter {
 
     // TODO: support for Extraction Function
 
+    public BoundFilter() {
+        type = BOUND_DRUID_FILTER_TYPE;
+    }
+
     @Builder
     private BoundFilter(@NonNull String dimension,
                         String lower,
@@ -48,7 +52,7 @@ public class BoundFilter extends DruidFilter {
                         Boolean upperStrict,
                         SortingOrder ordering) {
 
-        this.type = BOUND_DRUID_FILTER_TYPE;
+        type = BOUND_DRUID_FILTER_TYPE;
         this.dimension = dimension;
         this.lower = lower;
         this.upper = upper;

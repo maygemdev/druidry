@@ -21,8 +21,10 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 @Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 public class SearchFilter extends DruidFilter {
 
@@ -30,12 +32,16 @@ public class SearchFilter extends DruidFilter {
     private String dimension;
     private SearchQuerySpec query;
 
+    public SearchFilter() {
+        type = SEARCH_DRUID_FILTER_TYPE;
+    }
+
     @Builder
     private SearchFilter(@NonNull String dimension, @NonNull SearchQuerySpec searchQuerySpec) {
 
-        this.type = SEARCH_DRUID_FILTER_TYPE;
+        type = SEARCH_DRUID_FILTER_TYPE;
         this.dimension = dimension;
-        this.query = searchQuerySpec;
+        query = searchQuerySpec;
     }
 
     // TODO: Extraction Function

@@ -19,8 +19,10 @@ package in.zapr.druid.druidry.filter;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 @Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 public class NotFilter extends DruidFilter {
 
@@ -28,8 +30,12 @@ public class NotFilter extends DruidFilter {
 
     private DruidFilter field;
 
+    public NotFilter() {
+        type = NOT_DRUID_FILTER_TYPE;
+    }
+
     public NotFilter(@NonNull DruidFilter field) {
-        this.type = NOT_DRUID_FILTER_TYPE;
+        type = NOT_DRUID_FILTER_TYPE;
         this.field = field;
     }
 }

@@ -17,21 +17,28 @@
 package in.zapr.druid.druidry.extractionFunctions;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 @Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class JavascriptExtractionFunction extends ExtractionFunction {
 
     private String function;
     private Boolean injective;
 
+    public JavascriptExtractionFunction() {
+        type = JAVASCRIPT_TYPE;
+    }
+
     @Builder
     private JavascriptExtractionFunction(@NonNull String function, Boolean injective) {
-        this.type = JAVASCRIPT_TYPE;
+        type = JAVASCRIPT_TYPE;
         this.function = function;
         this.injective = injective;
     }

@@ -17,20 +17,27 @@
 package in.zapr.druid.druidry.extractionFunctions;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 @Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SubStringExtractionFunction extends ExtractionFunction {
     private Integer index;
     private Integer length;
 
+    public SubStringExtractionFunction() {
+        type = SUB_STRING_TYPE;
+    }
+
     @Builder
     private SubStringExtractionFunction(@NonNull Integer index, Integer length) {
-        this.type = SUB_STRING_TYPE;
+        type = SUB_STRING_TYPE;
         this.index = index;
         this.length = length;
     }

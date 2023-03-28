@@ -16,14 +16,15 @@
 
 package in.zapr.druid.druidry.filter;
 
-import java.util.List;
-
 import in.zapr.druid.druidry.query.config.Interval;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 @Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 public class IntervalFilter extends DruidFilter {
 
@@ -33,8 +34,12 @@ public class IntervalFilter extends DruidFilter {
     private String dimension;
     private List<Interval> intervals;
 
+    public IntervalFilter() {
+        type = INTERVAL_DRUID_FILTER_TYPE;
+    }
+
     public IntervalFilter(@NonNull String dimension, @NonNull List<Interval> intervals) {
-        this.type = INTERVAL_DRUID_FILTER_TYPE;
+        type = INTERVAL_DRUID_FILTER_TYPE;
         this.dimension = dimension;
         this.intervals = intervals;
     }

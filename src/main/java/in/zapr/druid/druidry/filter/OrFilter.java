@@ -17,20 +17,25 @@
 package in.zapr.druid.druidry.filter;
 
 import java.util.List;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 @Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 public class OrFilter extends DruidFilter {
 
     private static String OR_DRUID_FILTER_TYPE = "or";
     private List<DruidFilter> fields;
 
+    public OrFilter() {
+        type = OR_DRUID_FILTER_TYPE;
+    }
+
     public OrFilter(@NonNull List<DruidFilter> fields) {
-        this.type = OR_DRUID_FILTER_TYPE;
+        type = OR_DRUID_FILTER_TYPE;
         this.fields = fields;
     }
 }

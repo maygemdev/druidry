@@ -17,18 +17,26 @@
 package in.zapr.druid.druidry.filter.searchQuerySpec;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 @Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
 public class RegexSearchQuerySpec extends SearchQuerySpec {
     private final static String REGEX_SEARCH_QUERY_SPEC = "regex";
 
     private String pattern;
 
+    public RegexSearchQuerySpec() {
+        type = REGEX_SEARCH_QUERY_SPEC;
+    }
+
     @Builder
     private RegexSearchQuerySpec(@NonNull String pattern) {
-        this.type = REGEX_SEARCH_QUERY_SPEC;
+        type = REGEX_SEARCH_QUERY_SPEC;
         this.pattern = pattern;
     }
 }

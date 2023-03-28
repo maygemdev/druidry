@@ -16,18 +16,26 @@
 
 package in.zapr.druid.druidry.filter.searchQuerySpec;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 @Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
 public class InsensitiveContainsSearchQuerySpec extends SearchQuerySpec {
 
     private final static String INSENSITIVE_CONTAINS = "insensitive_contains";
 
     private String value;
 
+    public InsensitiveContainsSearchQuerySpec() {
+        type = INSENSITIVE_CONTAINS;
+    }
+
     public InsensitiveContainsSearchQuerySpec(@NonNull String value) {
-        this.type = INSENSITIVE_CONTAINS;
+        type = INSENSITIVE_CONTAINS;
         this.value = value;
     }
 }

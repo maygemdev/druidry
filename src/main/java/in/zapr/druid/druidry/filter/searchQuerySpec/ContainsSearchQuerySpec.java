@@ -17,12 +17,15 @@
 package in.zapr.druid.druidry.filter.searchQuerySpec;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
 public class ContainsSearchQuerySpec extends SearchQuerySpec {
 
     private final static String CONTAINS_SEARCH_QUERY_SPEC = "contains";
@@ -30,13 +33,17 @@ public class ContainsSearchQuerySpec extends SearchQuerySpec {
     private String value;
     private Boolean caseSensitive;
 
+    public ContainsSearchQuerySpec() {
+        type = CONTAINS_SEARCH_QUERY_SPEC;
+    }
+
     public ContainsSearchQuerySpec(@NonNull String value) {
         this(value, null);
     }
 
     public ContainsSearchQuerySpec(@NonNull String value, Boolean isCaseSensitive) {
-        this.type = CONTAINS_SEARCH_QUERY_SPEC;
+        type = CONTAINS_SEARCH_QUERY_SPEC;
         this.value = value;
-        this.caseSensitive = isCaseSensitive;
+        caseSensitive = isCaseSensitive;
     }
 }

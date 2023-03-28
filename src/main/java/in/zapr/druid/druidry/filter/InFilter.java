@@ -22,8 +22,10 @@ import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 @Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 public class InFilter extends DruidFilter {
     private static String IN_DRUID_FILTER_TYPE = "in";
@@ -32,6 +34,10 @@ public class InFilter extends DruidFilter {
     private List<String> values;
     @JsonProperty("extractionFn")
     private ExtractionFunction extractionFunction;
+
+    public InFilter() {
+        type = IN_DRUID_FILTER_TYPE;
+    }
 
     public InFilter(@NonNull String dimension, @NonNull List<String> values) {
         type = IN_DRUID_FILTER_TYPE;

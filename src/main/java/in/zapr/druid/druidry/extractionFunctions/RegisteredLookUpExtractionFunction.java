@@ -17,12 +17,15 @@
 package in.zapr.druid.druidry.extractionFunctions;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-
 import in.zapr.druid.druidry.lookUpSpec.LookUpSpec;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RegisteredLookUpExtractionFunction extends ExtractionFunction {
 
@@ -35,7 +38,7 @@ public class RegisteredLookUpExtractionFunction extends ExtractionFunction {
     @Builder
     private RegisteredLookUpExtractionFunction(LookUpSpec lookUp, Boolean retainMissingValue, Boolean injective,
                                                String replaceMissingValueWith, Boolean optimize) {
-        this.type = ExtractionFunction.LOOPUP_TYPE;
+        type = ExtractionFunction.LOOPUP_TYPE;
         this.lookUp = lookUp;
         this.retainMissingValue = retainMissingValue;
         this.injective = injective;

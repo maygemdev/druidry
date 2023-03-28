@@ -17,19 +17,26 @@
 package in.zapr.druid.druidry.extractionFunctions;
 
 import java.util.List;
-
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 @Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
 public class CascadeExtractionFunction extends ExtractionFunction {
 
     private List<ExtractionFunction> extractionFns;
 
+    public CascadeExtractionFunction() {
+        type = ExtractionFunction.CASCADE_TYPE;
+    }
+
     @Builder
     private CascadeExtractionFunction(@NonNull List<ExtractionFunction> extractionFns) {
-        this.type = ExtractionFunction.CASCADE_TYPE;
+        type = ExtractionFunction.CASCADE_TYPE;
         this.extractionFns = extractionFns;
     }
 }

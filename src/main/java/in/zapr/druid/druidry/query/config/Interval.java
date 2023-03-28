@@ -17,14 +17,14 @@
 package in.zapr.druid.druidry.query.config;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-
-import org.joda.time.DateTime;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
+import org.joda.time.DateTime;
 
 @Getter
+@Setter
 @EqualsAndHashCode
 public class Interval {
 
@@ -32,6 +32,8 @@ public class Interval {
 
     private DateTime startTime;
     private DateTime endTime;
+
+    public Interval() {}
 
     public Interval(@NonNull DateTime startTime, @NonNull DateTime endTime) {
         this.startTime = startTime;

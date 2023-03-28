@@ -22,8 +22,10 @@ import java.util.Optional;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 @Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 public class SelectorFilter extends DruidFilter {
 
@@ -33,6 +35,10 @@ public class SelectorFilter extends DruidFilter {
     private Object value;
     @JsonProperty("extractionFn")
     private ExtractionFunction extractionFunction;
+
+    public SelectorFilter() {
+        type = SELECTOR_DRUID_FILTER_TYPE;
+    }
 
     private SelectorFilter(@NonNull String dimension) {
         type = SELECTOR_DRUID_FILTER_TYPE;

@@ -19,8 +19,10 @@ package in.zapr.druid.druidry.filter;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 @Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 public class JavaScriptFilter extends DruidFilter {
 
@@ -29,8 +31,12 @@ public class JavaScriptFilter extends DruidFilter {
     private String dimension;
     private String function;
 
+    public JavaScriptFilter() {
+        type = JS_DRUID_FILTER_TYPE;
+    }
+
     public JavaScriptFilter(@NonNull String dimension, @NonNull String function) {
-        this.type = JS_DRUID_FILTER_TYPE;
+        type = JS_DRUID_FILTER_TYPE;
 
         this.dimension = dimension;
         this.function = function;

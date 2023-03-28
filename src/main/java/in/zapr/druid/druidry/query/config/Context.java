@@ -16,17 +16,17 @@
 
 package in.zapr.druid.druidry.query.config;
 
-import com.google.common.base.Preconditions;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.google.common.base.Preconditions;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 
 @Builder
 @Getter
+@Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @EqualsAndHashCode
 public class Context {
@@ -75,6 +75,10 @@ public class Context {
     // groupBy && timeseries query experimental contexts
     private Vectorize vectorize;
     private Integer vectorSize;
+
+    public Context() {
+
+    }
 
     private Context(Long timeoutInMilliSeconds,
                     Integer priority,

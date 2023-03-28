@@ -18,17 +18,25 @@ package in.zapr.druid.druidry.extractionFunctions;
 
 import in.zapr.druid.druidry.filter.searchQuerySpec.SearchQuerySpec;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 @Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
 public class SearchQueryExtractionFunction extends ExtractionFunction {
 
     private SearchQuerySpec query;
 
+    public SearchQueryExtractionFunction() {
+        type = SEARCH_QUERY_TYPE;
+    }
+
     @Builder
     private SearchQueryExtractionFunction(@NonNull SearchQuerySpec query) {
-        this.type = SEARCH_QUERY_TYPE;
+        type = SEARCH_QUERY_TYPE;
         this.query = query;
     }
 }

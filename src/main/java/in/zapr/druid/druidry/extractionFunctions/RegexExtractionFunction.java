@@ -17,12 +17,15 @@
 package in.zapr.druid.druidry.extractionFunctions;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 @Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RegexExtractionFunction extends ExtractionFunction {
 
@@ -31,11 +34,15 @@ public class RegexExtractionFunction extends ExtractionFunction {
     private Boolean replaceMissingValue;
     private String replaceMissingValueWith;
 
+    public RegexExtractionFunction() {
+        type = REGEX_TYPE;
+    }
+
     @Builder
     private RegexExtractionFunction(@NonNull String expr,
                                     Boolean replaceMissingValue,
                                     String replaceMissingValueWith) {
-        this.type = REGEX_TYPE;
+        type = REGEX_TYPE;
         this.expr = expr;
         this.replaceMissingValue = replaceMissingValue;
         this.replaceMissingValueWith = replaceMissingValueWith;

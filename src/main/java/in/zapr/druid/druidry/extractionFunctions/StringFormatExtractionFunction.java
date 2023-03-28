@@ -16,9 +16,13 @@
 
 package in.zapr.druid.druidry.extractionFunctions;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
 public class StringFormatExtractionFunction extends ExtractionFunction {
 
 }

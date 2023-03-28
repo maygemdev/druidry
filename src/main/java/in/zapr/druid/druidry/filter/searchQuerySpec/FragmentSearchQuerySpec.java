@@ -17,14 +17,16 @@
 package in.zapr.druid.druidry.filter.searchQuerySpec;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-
 import java.util.List;
-
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
 public class FragmentSearchQuerySpec extends SearchQuerySpec {
 
     private final static String FRAGMENT_SEARCH_QUERY_SPEC = "fragment";
@@ -32,13 +34,17 @@ public class FragmentSearchQuerySpec extends SearchQuerySpec {
     private List<String> values;
     private Boolean caseSensitive;
 
+    public FragmentSearchQuerySpec() {
+        type = FRAGMENT_SEARCH_QUERY_SPEC;
+    }
+
     public FragmentSearchQuerySpec(@NonNull List<String> values) {
         this(values, null);
     }
 
     public FragmentSearchQuerySpec(@NonNull List<String> values, Boolean isCaseSensitive) {
-        this.type = FRAGMENT_SEARCH_QUERY_SPEC;
+        type = FRAGMENT_SEARCH_QUERY_SPEC;
         this.values = values;
-        this.caseSensitive = isCaseSensitive;
+        caseSensitive = isCaseSensitive;
     }
 }
