@@ -14,8 +14,8 @@
 package in.zapr.druid.druidry.client;
 
 import in.zapr.druid.druidry.query.DruidQuery;
-import java.io.InputStream;
 import java.util.List;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 
 public interface DruidClient extends AutoCloseable {
     /**
@@ -39,5 +39,5 @@ public interface DruidClient extends AutoCloseable {
      */
     <T> List<T> query(DruidQuery query, Class<T> clazz) throws RuntimeIoException, DruidException;
 
-    InputStream queryAsInputStream(DruidQuery query) throws RuntimeIoException, DruidException;
+    CloseableHttpResponse queryAsInputStream(DruidQuery query) throws RuntimeIoException, DruidException;
 }
