@@ -31,6 +31,10 @@ import lombok.Setter;
 public class RegexFilteredDimension extends FilteredDimension {
     private String pattern;
 
+    public RegexFilteredDimension() {
+        type = "regexFiltered";
+    }
+
     @Builder
     public RegexFilteredDimension(@NonNull DimensionSpec dimensionSpec, @NonNull String pattern) {
         this.pattern = pattern;

@@ -18,15 +18,16 @@ package in.zapr.druid.druidry.dimension;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import in.zapr.druid.druidry.dimension.enums.OutputType;
 import in.zapr.druid.druidry.extractionFunctions.ExtractionFunction;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 @Getter
+@Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @EqualsAndHashCode(callSuper = true)
 public class ExtractionDimension extends DimensionSpec {
@@ -36,11 +37,15 @@ public class ExtractionDimension extends DimensionSpec {
     @JsonProperty("extractionFn")
     private ExtractionFunction extractionFunction;
 
+    public ExtractionDimension() {
+        type = ExtractionDimension.EXTRACTION_TYPE;
+    }
+
     @Builder
     public ExtractionDimension(@NonNull String dimension, @NonNull String outputName,
                                OutputType outputType,
                                @NonNull ExtractionFunction extractionFunction) {
-        this.type = ExtractionDimension.EXTRACTION_TYPE;
+        type = ExtractionDimension.EXTRACTION_TYPE;
         this.dimension = dimension;
         this.outputName = outputName;
         this.outputType = outputType;

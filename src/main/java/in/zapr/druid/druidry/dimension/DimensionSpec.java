@@ -20,13 +20,13 @@ import in.zapr.druid.druidry.dimension.enums.OutputType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 @Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 public abstract class DimensionSpec extends DruidDimension {
 
-    @NonNull
-    protected String type;
 
     @NonNull
     protected String dimension;

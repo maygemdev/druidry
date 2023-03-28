@@ -22,8 +22,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 @Getter
+@Setter
 @EqualsAndHashCode
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = As.EXISTING_PROPERTY, property = "type", visible = true)
 @JsonSubTypes({

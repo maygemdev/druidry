@@ -31,6 +31,10 @@ import lombok.Setter;
 public class PrefixFilteredDimension extends FilteredDimension {
     private String prefix;
 
+    public PrefixFilteredDimension() {
+        type = "prefixFiltered";
+    }
+
     @Builder
     public PrefixFilteredDimension(@NonNull DimensionSpec dimensionSpec, @NonNull String prefix) {
         this.prefix = prefix;

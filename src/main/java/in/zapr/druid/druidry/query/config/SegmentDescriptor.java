@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
-import org.joda.time.Interval;
 
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
