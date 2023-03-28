@@ -16,9 +16,21 @@
 
 package in.zapr.druid.druidry.filter.searchQuerySpec;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
+@EqualsAndHashCode
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = As.EXISTING_PROPERTY, property = "type", visible = true)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = ContainsSearchQuerySpec.class, name = "contains"),
+        @JsonSubTypes.Type(value = FragmentSearchQuerySpec.class, name = "fragment"),
+        @JsonSubTypes.Type(value = InsensitiveContainsSearchQuerySpec.class, name = "insensitive_contains"),
+        @JsonSubTypes.Type(value = RegexSearchQuerySpec.class, name = "regex")
+})
 public abstract class SearchQuerySpec {
     protected String type;
 }

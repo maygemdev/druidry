@@ -16,11 +16,27 @@
 
 package in.zapr.druid.druidry.filter;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
 @EqualsAndHashCode
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = As.EXISTING_PROPERTY, property = "type", visible = true)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = AndFilter.class, name = "and"),
+        @JsonSubTypes.Type(value = BoundFilter.class, name = "bound"),
+        @JsonSubTypes.Type(value = InFilter.class, name = "in"),
+        @JsonSubTypes.Type(value = IntervalFilter.class, name = "interval"),
+        @JsonSubTypes.Type(value = JavaScriptFilter.class, name = "javascript"),
+        @JsonSubTypes.Type(value = NotFilter.class, name = "not"),
+        @JsonSubTypes.Type(value = OrFilter.class, name = "or"),
+        @JsonSubTypes.Type(value = RegexFilter.class, name = "regex"),
+        @JsonSubTypes.Type(value = SearchFilter.class, name = "search"),
+        @JsonSubTypes.Type(value = SelectorFilter.class, name = "selector"),
+})
 public abstract class DruidFilter {
     protected String type;
 }

@@ -16,12 +16,28 @@
 
 package in.zapr.druid.druidry.extractionFunctions;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
 @EqualsAndHashCode
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = As.EXISTING_PROPERTY, property = "type", visible = true)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = CascadeExtractionFunction.class, name = "cascade"),
+        @JsonSubTypes.Type(value = JavascriptExtractionFunction.class, name = "javascript"),
+        @JsonSubTypes.Type(value = LookUpExtractionFunction.class, name = "lookup"),
+        @JsonSubTypes.Type(value = PartialExtractionFunction.class, name = "partial"),
+        @JsonSubTypes.Type(value = RegexExtractionFunction.class, name = "regex"),
+        @JsonSubTypes.Type(value = SearchQueryExtractionFunction.class, name = "searchQuery"),
+        @JsonSubTypes.Type(value = StrLenExtractionFunction.class, name = "strlen"),
+        @JsonSubTypes.Type(value = SubStringExtractionFunction.class, name = "substring"),
+        @JsonSubTypes.Type(value = TimeFormatExtractionFunction.class, name = "timeFormat"),
+        @JsonSubTypes.Type(value = TimeParsingExtractionFunction.class, name = "time")
+})
 public abstract class ExtractionFunction {
     protected static final String REGEX_TYPE = "regex";
     protected static final String PARTIAL_TYPE = "partial";
