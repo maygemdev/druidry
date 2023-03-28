@@ -34,6 +34,10 @@ public class ListFilteredDimension extends FilteredDimension {
     @JsonProperty(value = "isWhitelist")
     private Boolean whitelist;
 
+    public ListFilteredDimension() {
+        type = "listFiltered";
+    }
+
     @Builder
     public ListFilteredDimension(@NonNull DimensionSpec dimensionSpec, @NonNull List<String> values, Boolean whitelist) {
         delegate = dimensionSpec;
