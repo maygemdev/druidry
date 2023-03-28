@@ -15,8 +15,6 @@ package in.zapr.druid.druidry.dimension;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -25,14 +23,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
-@JsonTypeInfo(use = JsonTypeInfo.Id.NONE, include = As.EXISTING_PROPERTY, property = "type", visible = true, defaultImpl = SimpleDimension.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SimpleDimension extends DruidDimension {
 
     @JsonValue
     private String dimension;
 
-    public SimpleDimension() {}
+    public SimpleDimension() {
+    }
 
     public SimpleDimension(String dimension) {
         this.dimension = dimension;
