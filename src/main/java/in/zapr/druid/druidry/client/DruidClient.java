@@ -40,4 +40,6 @@ public interface DruidClient extends AutoCloseable {
     <T> List<T> query(DruidQuery query, Class<T> clazz) throws RuntimeIoException, DruidException;
 
     CloseableHttpResponse queryAsInputStream(DruidQuery query) throws RuntimeIoException, DruidException;
+
+    CloseableHttpResponse queryAsInputStream(String host, DruidQuery query) throws RuntimeIoException, DruidException;
 }

@@ -10,6 +10,8 @@ import in.zapr.druid.druidry.client.RuntimeIoException;
 import in.zapr.druid.druidry.query.DruidQuery;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import org.apache.commons.lang3.reflect.TypeUtils;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -82,9 +84,24 @@ public class ApacheDruidClient implements DruidClient {
 
     @Override
     public CloseableHttpResponse queryAsInputStream(DruidQuery query) {
+        return runQueryAsInputStream(url, query);
+    }
+
+    @Override
+    public CloseableHttpResponse queryAsInputStream(String host, DruidQuery query) throws RuntimeIoException, DruidException {
+        try {
+            URL baseUrl = new URL(url);
+            return runQueryAsInputStream(baseUrl.getProtocol() + "://" + host + baseUrl.getPath(), query);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private CloseableHttpResponse runQueryAsInputStream(String host, DruidQuery query) throws RuntimeIoException, DruidException {
         try {
             String body = jsonMapper.writeValueAsString(query);
-            ClassicHttpRequest req = ClassicRequestBuilder.post(url)
+            ClassicHttpRequest req = ClassicRequestBuilder.post(host)
                     .addHeader(HttpHeaders.ACCEPT, ContentType.APPLICATION_JSON.toString())
                     .setEntity(body, ContentType.APPLICATION_JSON)
                     .build();
@@ -131,4 +148,5 @@ public class ApacheDruidClient implements DruidClient {
             throw new IOException(e);
         }
     }
+
 }
