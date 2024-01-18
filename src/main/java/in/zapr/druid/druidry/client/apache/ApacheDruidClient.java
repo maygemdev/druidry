@@ -64,15 +64,6 @@ public class ApacheDruidClient implements DruidClient {
                 switch (resp.getCode()) {
                     case HttpStatus.SC_OK:
                         return readResponse(resp);
-
-                    case HttpStatus.SC_BAD_REQUEST:
-                    case HttpStatus.SC_TOO_MANY_REQUESTS:
-                    case HttpStatus.SC_INTERNAL_SERVER_ERROR:
-                    case HttpStatus.SC_NOT_IMPLEMENTED:
-                    case HttpStatus.SC_GATEWAY_TIMEOUT:
-                        DruidError err = jsonMapper.readValue(resp.getEntity().getContent(), DruidError.class);
-                        throw new DruidException(err);
-
                     default:
                         throw new IOException(String.format("%d: %s", resp.getCode(), readResponse(resp)));
                 }
