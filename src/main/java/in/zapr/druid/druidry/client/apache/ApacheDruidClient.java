@@ -69,8 +69,9 @@ public class ApacheDruidClient implements DruidClient {
                         case HttpStatus.SC_OK:
                             return readResponse(resp);
                         default:
-                            if (tryCount == MAX_RETRY) {
-                                throw new IOException(String.format("%d: %s", resp.getCode(), readResponse(resp)));
+                            String respBody = readResponse(resp);
+                            if (tryCount == MAX_RETRY || !retryableException(body)) {
+                                throw new IOException(String.format("%d: %s", resp.getCode(), respBody));
                             }
                     }
                 }
@@ -144,4 +145,7 @@ public class ApacheDruidClient implements DruidClient {
         }
     }
 
+    private boolean retryableException(String body) {
+        return body != null && body.contains("SegmentMissingException");
+    }
 }
