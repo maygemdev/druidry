@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import in.zapr.druid.druidry.client.DruidClient;
-import in.zapr.druid.druidry.client.DruidError;
 import in.zapr.druid.druidry.client.DruidException;
 import in.zapr.druid.druidry.client.RuntimeIoException;
 import in.zapr.druid.druidry.query.DruidQuery;
@@ -26,6 +25,9 @@ import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.support.ClassicRequestBuilder;
 
 public class ApacheDruidClient implements DruidClient {
+
+    private static final int MAX_RETRY = 5;
+
     private final String url;
 
     private final CloseableHttpClient http;
@@ -55,18 +57,29 @@ public class ApacheDruidClient implements DruidClient {
     public String query(DruidQuery query) {
         try {
             String body = jsonMapper.writeValueAsString(query);
-            ClassicHttpRequest req = ClassicRequestBuilder.post(url)
-                    .addHeader(HttpHeaders.ACCEPT, ContentType.APPLICATION_JSON.toString())
-                    .setEntity(body, ContentType.APPLICATION_JSON)
-                    .build();
-            // TODO: Replace deprecated execute() API usage.
-            try (CloseableHttpResponse resp = http.execute(req)) {
-                switch (resp.getCode()) {
-                    case HttpStatus.SC_OK:
-                        return readResponse(resp);
-                    default:
-                        throw new IOException(String.format("%d: %s", resp.getCode(), readResponse(resp)));
+            while (true) {
+                int tryCount = 1;
+                ClassicHttpRequest req = ClassicRequestBuilder.post(url)
+                        .addHeader(HttpHeaders.ACCEPT, ContentType.APPLICATION_JSON.toString())
+                        .setEntity(body, ContentType.APPLICATION_JSON)
+                        .build();
+                // TODO: Replace deprecated execute() API usage.
+                try (CloseableHttpResponse resp = http.execute(req)) {
+                    switch (resp.getCode()) {
+                        case HttpStatus.SC_OK:
+                            return readResponse(resp);
+                        default:
+                            if (tryCount == MAX_RETRY) {
+                                throw new IOException(String.format("%d: %s", resp.getCode(), readResponse(resp)));
+                            }
+                    }
                 }
+                try {
+                    Thread.sleep(tryCount == 1 ? 1000 : 5000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeIoException(e);
+                }
+                tryCount++;
             }
         } catch (IOException e) {
             throw new RuntimeIoException(e);
@@ -101,15 +114,6 @@ public class ApacheDruidClient implements DruidClient {
             switch (resp.getCode()) {
                 case HttpStatus.SC_OK:
                     return resp;
-
-                case HttpStatus.SC_BAD_REQUEST:
-                case HttpStatus.SC_TOO_MANY_REQUESTS:
-                case HttpStatus.SC_INTERNAL_SERVER_ERROR:
-                case HttpStatus.SC_NOT_IMPLEMENTED:
-                case HttpStatus.SC_GATEWAY_TIMEOUT:
-                    DruidError err = jsonMapper.readValue(resp.getEntity().getContent(), DruidError.class);
-                    throw new DruidException(err);
-
                 default:
                     throw new IOException(String.format("%d: %s", resp.getCode(), readResponse(resp)));
             }
