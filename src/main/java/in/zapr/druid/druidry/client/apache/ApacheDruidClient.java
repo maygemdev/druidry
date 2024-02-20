@@ -26,7 +26,7 @@ import org.apache.hc.core5.http.io.support.ClassicRequestBuilder;
 
 public class ApacheDruidClient implements DruidClient {
 
-    private static final int MAX_RETRY = 5;
+    private static final int MAX_RETRY = 10;
 
     private final String url;
 
