@@ -70,7 +70,7 @@ public class ApacheDruidClient implements DruidClient {
                             return readResponse(resp);
                         default:
                             String respBody = readResponse(resp);
-                            if (tryCount == MAX_RETRY || !retryableException(body)) {
+                            if (tryCount == MAX_RETRY || !retryableException(respBody)) {
                                 throw new IOException(String.format("%d: %s", resp.getCode(), respBody));
                             }
                     }
