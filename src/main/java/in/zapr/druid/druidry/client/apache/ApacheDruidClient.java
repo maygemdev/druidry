@@ -71,7 +71,7 @@ public class ApacheDruidClient implements DruidClient {
                         default:
                             String respBody = readResponse(resp);
                             if (tryCount == MAX_RETRY || !retryableException(respBody)) {
-                                throw new IOException(String.format("%d: %s", resp.getCode(), respBody));
+                                throw new IOException(String.format("%d: %s.\n For request:\n %s", resp.getCode(), respBody, body));
                             }
                     }
                 }
@@ -116,7 +116,7 @@ public class ApacheDruidClient implements DruidClient {
                 case HttpStatus.SC_OK:
                     return resp;
                 default:
-                    throw new IOException(String.format("%d: %s", resp.getCode(), readResponse(resp)));
+                    throw new IOException(String.format("%d: %s.For request:\\n %s", resp.getCode(), readResponse(resp), body));
             }
         } catch (IOException e) {
             throw new RuntimeIoException(e);
