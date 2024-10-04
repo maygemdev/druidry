@@ -44,6 +44,7 @@ public class DruidGroupByQuery extends DruidAggregationQuery {
     private HavingSpec having;
     @NonNull
     private List<DruidDimension> dimensions;
+    private List<List<String>> subtotalsSpec;
 
     @Builder
     private DruidGroupByQuery(@NonNull DataSource dataSource,
@@ -55,9 +56,9 @@ public class DruidGroupByQuery extends DruidAggregationQuery {
                               List<DruidAggregator> aggregators,
                               List<DruidPostAggregator> postAggregators,
                               HavingSpec having,
-            @NonNull QuerySegmentSpec intervals,
+                              @NonNull QuerySegmentSpec intervals,
+                              List<List<String>> subtotalsSpec,
                               Context context) {
-
         queryType = QueryType.GROUP_BY;
         this.dataSource = dataSource;
         this.dimensions = dimensions;
@@ -69,6 +70,7 @@ public class DruidGroupByQuery extends DruidAggregationQuery {
         postAggregations = postAggregators;
         this.having = having;
         this.intervals = intervals;
+        this.subtotalsSpec=subtotalsSpec;
         this.context = context;
     }
 }
