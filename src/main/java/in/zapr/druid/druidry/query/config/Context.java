@@ -76,6 +76,8 @@ public class Context {
     private Vectorize vectorize;
     private Integer vectorSize;
 
+    private Boolean resultAsArray;
+
     public Context() {
 
     }
@@ -113,7 +115,8 @@ public class Context {
                     Integer maxResults,
                     Boolean useOffheap,
                     Vectorize vectorize,
-                    Integer vectorSize) {
+                    Integer vectorSize,
+                    Boolean resultAsArray) {
 
         this.timeoutInMilliSeconds = timeoutInMilliSeconds;
         this.priority = priority;
@@ -149,6 +152,7 @@ public class Context {
         this.useOffheap = useOffheap;
         this.vectorize = vectorize;
         this.vectorSize = vectorSize;
+        this.resultAsArray = resultAsArray;
 
         if (timeoutInMilliSeconds != null) {
             Preconditions.checkArgument(timeoutInMilliSeconds >= 0, "Timeout must be a non negative value, but was [%s]", timeoutInMilliSeconds);
