@@ -84,6 +84,7 @@ public class ContextTest {
                 .useOffheap(false)
                 .vectorize(Vectorize.FORCE)
                 .vectorSize(1024)
+                .resultAsArray(true)
                 .build();
 
         JSONObject jsonObject = new JSONObject();
@@ -121,6 +122,8 @@ public class ContextTest {
         jsonObject.put("useOffheap", false);
         jsonObject.put("vectorize", "force");
         jsonObject.put("vectorSize", 1024);
+        jsonObject.put("resultAsArray", true);
+
 
         String actualJSON = objectMapper.writeValueAsString(context);
         String expectedJSON = jsonObject.toString();
