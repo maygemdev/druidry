@@ -146,6 +146,6 @@ public class ApacheDruidClient implements DruidClient {
     }
 
     private boolean retryableException(String body) {
-        return body != null && body.contains("SegmentMissingException");
+        return body != null && (body.contains("SegmentMissingException") || body.contains("missing segments"));
     }
 }
