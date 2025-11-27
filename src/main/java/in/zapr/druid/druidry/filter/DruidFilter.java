@@ -36,6 +36,7 @@ import lombok.Getter;
         @JsonSubTypes.Type(value = RegexFilter.class, name = "regex"),
         @JsonSubTypes.Type(value = SearchFilter.class, name = "search"),
         @JsonSubTypes.Type(value = SelectorFilter.class, name = "selector"),
+        @JsonSubTypes.Type(value = LikeFilter.class, name = "like"),
 })
 public abstract class DruidFilter {
     protected String type;

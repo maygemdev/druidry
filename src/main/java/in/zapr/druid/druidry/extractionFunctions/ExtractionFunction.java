@@ -38,7 +38,9 @@ import lombok.Setter;
         @JsonSubTypes.Type(value = StrLenExtractionFunction.class, name = "strlen"),
         @JsonSubTypes.Type(value = SubStringExtractionFunction.class, name = "substring"),
         @JsonSubTypes.Type(value = TimeFormatExtractionFunction.class, name = "timeFormat"),
-        @JsonSubTypes.Type(value = TimeParsingExtractionFunction.class, name = "time")
+        @JsonSubTypes.Type(value = TimeParsingExtractionFunction.class, name = "time"),
+        @JsonSubTypes.Type(value = LowerExtractionFunction.class, name = "lower"),
+        @JsonSubTypes.Type(value = UpperExtractionFunction.class, name = "upper"),
 })
 public abstract class ExtractionFunction {
     protected static final String REGEX_TYPE = "regex";
@@ -50,6 +52,8 @@ public abstract class ExtractionFunction {
     protected static final String TIME_PARSING_TYPE = "time";
     protected static final String JAVASCRIPT_TYPE = "javascript";
     protected static final String LOOPUP_TYPE = "lookup";
+    protected static final String LOWER_TYPE = "lower";
+    protected static final String UPPER_TYPE = "upper";
 
     // todo: bottom 3 are left to code. Also check for timeZone in timeformat type. lookup is also left
     protected static final String REGISTERED_LOOKUP_TYPE = "registeredLookup";
