@@ -16,6 +16,7 @@
 
 package in.zapr.druid.druidry.query.config;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -43,5 +44,14 @@ public class Interval {
     @JsonValue
     private String getIntervalAsString() {
         return String.format(DRUID_INTERVAL_FORMAT, startTime.toDateTimeISO(), endTime.toDateTimeISO());
+    }
+
+    @JsonCreator
+    public static Interval fromString(String value) {
+        String[] split = value.split("/");
+        if (split.length != 2) {
+            throw new IllegalArgumentException("Invalid interval format");
+        }
+        return new Interval(DateTime.parse(split[0]), DateTime.parse(split[1]));
     }
 }
