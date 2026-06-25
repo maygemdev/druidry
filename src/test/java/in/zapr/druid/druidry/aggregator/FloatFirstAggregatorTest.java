@@ -16,8 +16,8 @@
 
 package in.zapr.druid.druidry.aggregator;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,15 +32,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FloatFirstAggregatorTest {
 
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
     }
 
     @Test
-    public void testAllFields() throws JsonProcessingException, JSONException {
+    public void testAllFields() throws JacksonException, JSONException {
 
         FloatFirstAggregator floatFirstAggregator = new FloatFirstAggregator("CarpeDiem",
                 "Hey");
@@ -57,13 +57,13 @@ public class FloatFirstAggregatorTest {
 
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void testNullName() throws JsonProcessingException, JSONException {
+    public void testNullName() throws JacksonException, JSONException {
 
         FloatFirstAggregator floatFirstAggregator = new FloatFirstAggregator(null, "Hey");
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void testFieldName() throws JsonProcessingException, JSONException {
+    public void testFieldName() throws JacksonException, JSONException {
 
         FloatFirstAggregator floatFirstAggregator = new FloatFirstAggregator("CarpeDiem", null);
     }

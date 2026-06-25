@@ -16,8 +16,8 @@
 
 package in.zapr.druid.druidry.topNMetric;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,11 +29,11 @@ import org.testng.annotations.Test;
 
 public class NumericMetricTest {
 
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
     }
 
     private JSONObject getNumericMetricJSON() throws JSONException {
@@ -45,7 +45,7 @@ public class NumericMetricTest {
     }
 
     @Test
-    public void testAllFields() throws JsonProcessingException, JSONException {
+    public void testAllFields() throws JacksonException, JSONException {
 
         NumericMetric numericMetric = new NumericMetric("events");
 

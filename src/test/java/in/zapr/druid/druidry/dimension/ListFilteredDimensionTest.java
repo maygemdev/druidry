@@ -16,8 +16,8 @@
 
 package in.zapr.druid.druidry.dimension;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.json.JSONException;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -28,16 +28,16 @@ import org.testng.annotations.Test;
 import java.util.Arrays;
 
 public class ListFilteredDimensionTest {
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
     }
 
 
     @Test
-    public void testListFilteredDimension() throws JsonProcessingException, JSONException {
+    public void testListFilteredDimension() throws JacksonException, JSONException {
         DimensionSpec dimensionSpec = DefaultDimension.builder()
                 .dimension("system_label_values")
                 .outputName("system_label_values")
@@ -64,7 +64,7 @@ public class ListFilteredDimensionTest {
     }
 
     @Test
-    public void testListFilteredDimensionIsWhiteListedFalse() throws JsonProcessingException, JSONException {
+    public void testListFilteredDimensionIsWhiteListedFalse() throws JacksonException, JSONException {
         DimensionSpec dimensionSpec = DefaultDimension.builder()
                 .dimension("system_label_values")
                 .outputName("system_label_values")
@@ -91,7 +91,7 @@ public class ListFilteredDimensionTest {
     }
 
     @Test
-    public void testListFilteredDimensionIsWhiteListedDefault() throws JsonProcessingException, JSONException {
+    public void testListFilteredDimensionIsWhiteListedDefault() throws JacksonException, JSONException {
         DimensionSpec dimensionSpec = DefaultDimension.builder()
                 .dimension("system_label_values")
                 .outputName("system_label_values")
@@ -116,14 +116,14 @@ public class ListFilteredDimensionTest {
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void testListFilteredDimensionWithNullDimension() throws JsonProcessingException {
+    public void testListFilteredDimensionWithNullDimension() throws JacksonException {
         ListFilteredDimension listFilteredDimension = ListFilteredDimension.builder()
                 .values(Arrays.asList("compute.googleapis.com/cores`1"))
                 .build();
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void testListFilteredDimensionWithNullList() throws JsonProcessingException {
+    public void testListFilteredDimensionWithNullList() throws JacksonException {
         DimensionSpec dimensionSpec = DefaultDimension.builder()
                 .dimension("system_label_values")
                 .outputName("system_label_values")

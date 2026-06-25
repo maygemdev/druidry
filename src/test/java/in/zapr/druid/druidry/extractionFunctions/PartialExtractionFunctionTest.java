@@ -16,8 +16,8 @@
 
 package in.zapr.druid.druidry.extractionFunctions;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.json.JSONException;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -26,15 +26,15 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class PartialExtractionFunctionTest {
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
     }
 
     @Test
-    public void testAllFields() throws JsonProcessingException, JSONException {
+    public void testAllFields() throws JacksonException, JSONException {
 
         PartialExtractionFunction partialExtractionFunction = PartialExtractionFunction.builder()
                 .expr("abcd")
@@ -48,7 +48,7 @@ public class PartialExtractionFunctionTest {
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void testExprField() throws JsonProcessingException, JSONException {
+    public void testExprField() throws JacksonException, JSONException {
         PartialExtractionFunction partialExtractionFunction = PartialExtractionFunction.builder()
                 .build();
     }

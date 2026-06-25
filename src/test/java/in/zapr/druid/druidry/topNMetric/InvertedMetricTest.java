@@ -1,7 +1,7 @@
 package in.zapr.druid.druidry.topNMetric;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,11 +13,11 @@ import org.testng.annotations.Test;
 
 @Slf4j
 public class InvertedMetricTest {
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
     }
 
     private JSONObject getInvertedMetricJSON() throws JSONException {
@@ -29,7 +29,7 @@ public class InvertedMetricTest {
     }
 
     @Test
-    public void testAllFields() throws JsonProcessingException, JSONException {
+    public void testAllFields() throws JacksonException, JSONException {
 
         InvertedMetric invertedMetric = new InvertedMetric(new SimpleMetric("count"));
 

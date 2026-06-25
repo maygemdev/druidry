@@ -16,8 +16,8 @@
 
 package in.zapr.druid.druidry.dimension;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.json.JSONException;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -26,15 +26,15 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class RegexFilteredDimensionTest {
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
     }
 
     @Test
-    public void testSampleRegexFilteredDimension() throws JsonProcessingException, JSONException {
+    public void testSampleRegexFilteredDimension() throws JacksonException, JSONException {
         DimensionSpec dimensionSpec = DefaultDimension.builder()
                 .dimension("system_label_values")
                 .outputName("system_label_values")
@@ -59,14 +59,14 @@ public class RegexFilteredDimensionTest {
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void testSampleRegexFilteredDimensionWithNullDimensionSpec() throws JsonProcessingException {
+    public void testSampleRegexFilteredDimensionWithNullDimensionSpec() throws JacksonException {
         RegexFilteredDimension regexFilteredDimension = RegexFilteredDimension.builder()
                 .pattern("compute.googleapis.com/cores`.*")
                 .build();
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void testSampleRegexFilteredDimensionWithNullRegex() throws JsonProcessingException {
+    public void testSampleRegexFilteredDimensionWithNullRegex() throws JacksonException {
         DimensionSpec dimensionSpec = DefaultDimension.builder()
                 .dimension("system_label_values")
                 .outputName("system_label_values")

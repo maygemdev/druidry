@@ -21,8 +21,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 import in.zapr.druid.druidry.dataSource.TableDataSource;
 import in.zapr.druid.druidry.dimension.enums.OutputType;
 import in.zapr.druid.druidry.filter.DruidFilter;
@@ -42,17 +42,19 @@ import org.testng.annotations.Test;
 
 import in.zapr.druid.druidry.query.config.Interval;
 public class DruidScanQueryTest {
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(Include.NON_EMPTY);
+        objectMapper = JsonMapper.builder()
+                .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(Include.NON_EMPTY)
+                        .withContentInclusion(Include.NON_EMPTY))
+                .build();
     }
 
 
     @Test
-    public void testSampleQuery() throws JsonProcessingException, JSONException {
+    public void testSampleQuery() throws JacksonException, JSONException {
 
 
         List<String> searchDimensions
@@ -113,7 +115,7 @@ public class DruidScanQueryTest {
     }
 
     @Test
-    public void testRequiredFields() throws JsonProcessingException, JSONException {
+    public void testRequiredFields() throws JacksonException, JSONException {
 
 
         DateTime startTime = new DateTime(2013, 1, 1, 0,
@@ -177,7 +179,7 @@ public class DruidScanQueryTest {
     }
 
     @Test
-    public void testSampleQueryWithEmptyLines() throws JsonProcessingException, JSONException {
+    public void testSampleQueryWithEmptyLines() throws JacksonException, JSONException {
 
 
         List<String> searchDimensions

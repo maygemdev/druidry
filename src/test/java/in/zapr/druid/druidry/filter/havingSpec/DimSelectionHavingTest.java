@@ -16,8 +16,8 @@
 
 package in.zapr.druid.druidry.filter.havingSpec;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,15 +29,15 @@ import org.testng.annotations.Test;
 import java.util.Optional;
 
 public class DimSelectionHavingTest {
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
     }
 
     @Test
-    public void testAllFieldsNumeric() throws JSONException, JsonProcessingException {
+    public void testAllFieldsNumeric() throws JSONException, JacksonException {
         HavingSpec having = new DimSelectorHaving("dimension_name", 2);
 
         JSONObject jsonObject = new JSONObject();
@@ -51,7 +51,7 @@ public class DimSelectionHavingTest {
     }
 
     @Test
-    public void testAllFieldsString() throws JSONException, JsonProcessingException {
+    public void testAllFieldsString() throws JSONException, JacksonException {
         HavingSpec having = new DimSelectorHaving("dimension_name", "2");
 
         JSONObject jsonObject = new JSONObject();
@@ -65,7 +65,7 @@ public class DimSelectionHavingTest {
     }
 
     @Test
-    public void testOptionalWithNumericField() throws JSONException, JsonProcessingException {
+    public void testOptionalWithNumericField() throws JSONException, JacksonException {
         HavingSpec having = new DimSelectorHaving("dimension_name", Optional.ofNullable(2));
 
         JSONObject jsonObject = new JSONObject();
@@ -79,7 +79,7 @@ public class DimSelectionHavingTest {
     }
 
     @Test
-    public void testOptionalWithStringField() throws JSONException, JsonProcessingException {
+    public void testOptionalWithStringField() throws JSONException, JacksonException {
         HavingSpec having = new DimSelectorHaving("dimension_name", Optional.ofNullable("2"));
 
         JSONObject jsonObject = new JSONObject();
@@ -93,7 +93,7 @@ public class DimSelectionHavingTest {
     }
 
     @Test
-    public void testOptionalWithNullField() throws JSONException, JsonProcessingException {
+    public void testOptionalWithNullField() throws JSONException, JacksonException {
         HavingSpec having = new DimSelectorHaving("dimension_name", Optional.ofNullable(null));
 
         JSONObject jsonObject = new JSONObject();

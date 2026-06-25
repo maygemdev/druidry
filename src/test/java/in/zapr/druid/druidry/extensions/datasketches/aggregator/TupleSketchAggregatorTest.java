@@ -16,8 +16,8 @@
 
 package in.zapr.druid.druidry.extensions.datasketches.aggregator;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,11 +31,11 @@ import java.util.Arrays;
 
 public class TupleSketchAggregatorTest {
 
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
     }
 
     private JSONObject getTupleSketchAggregatorJSON() throws JSONException {
@@ -48,7 +48,7 @@ public class TupleSketchAggregatorTest {
     }
 
     @Test
-    public void testAllFields() throws JsonProcessingException, JSONException {
+    public void testAllFields() throws JacksonException, JSONException {
 
         TupleSketchAggregator tupleSketchAggregator = TupleSketchAggregator.builder()
                 .name("galaxy_tuple_sketch")
@@ -69,7 +69,7 @@ public class TupleSketchAggregatorTest {
     }
 
     @Test
-    public void testRequiredFields() throws JsonProcessingException, JSONException {
+    public void testRequiredFields() throws JacksonException, JSONException {
 
         TupleSketchAggregator tupleSketchAggregator = TupleSketchAggregator.builder()
                 .name("galaxy_tuple_sketch")

@@ -16,8 +16,8 @@
 
 package in.zapr.druid.druidry.postAggregator;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,11 +36,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ArithmeticPostAggregatorTest {
 
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
     }
 
     private List<JSONObject> getDruidAggregatorJSONs() throws JSONException {
@@ -53,7 +53,7 @@ public class ArithmeticPostAggregatorTest {
     }
 
     @Test
-    public void testArithmeticPostAggregatorAllFields() throws JsonProcessingException, JSONException {
+    public void testArithmeticPostAggregatorAllFields() throws JacksonException, JSONException {
 
         FieldAccessPostAggregator fieldAccessPostAggregator
                 = new FieldAccessPostAggregator("Hello", "World");
@@ -83,7 +83,7 @@ public class ArithmeticPostAggregatorTest {
     }
 
     @Test
-    public void testArithmeticPostAggregatorRequiredFields() throws JsonProcessingException,
+    public void testArithmeticPostAggregatorRequiredFields() throws JacksonException,
             JSONException {
 
         FieldAccessPostAggregator fieldAccessPostAggregator

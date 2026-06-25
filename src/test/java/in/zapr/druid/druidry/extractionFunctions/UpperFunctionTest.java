@@ -16,8 +16,8 @@
 
 package in.zapr.druid.druidry.extractionFunctions;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 import org.json.JSONException;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
@@ -28,15 +28,15 @@ import java.util.Locale;
 
 public class UpperFunctionTest {
 
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
     }
 
     @Test
-    public void testAllFields() throws JsonProcessingException, JSONException {
+    public void testAllFields() throws JacksonException, JSONException {
         Locale locale = Locale.ITALIAN;
 
         UpperExtractionFunction upperExtractionFunction = UpperExtractionFunction.builder()
@@ -51,7 +51,7 @@ public class UpperFunctionTest {
     }
 
     @Test
-    public void TestRequiredFields() throws JsonProcessingException, JSONException {
+    public void TestRequiredFields() throws JacksonException, JSONException {
         UpperExtractionFunction upperExtractionFunction = UpperExtractionFunction.builder().build();
 
         String actualJSON = objectMapper.writeValueAsString(upperExtractionFunction);

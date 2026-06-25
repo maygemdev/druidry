@@ -17,8 +17,8 @@
 package in.zapr.druid.druidry.query.search;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 import in.zapr.druid.druidry.dataSource.TableDataSource;
 import in.zapr.druid.druidry.dimension.DruidDimension;
 import in.zapr.druid.druidry.dimension.SimpleDimension;
@@ -45,16 +45,18 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class DruidSearchQueryTest {
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(Include.NON_EMPTY);
+        objectMapper = JsonMapper.builder()
+                .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(Include.NON_EMPTY)
+                        .withContentInclusion(Include.NON_EMPTY))
+                .build();
     }
 
     @Test
-    public void testSampleQuery() throws JsonProcessingException, JSONException {
+    public void testSampleQuery() throws JacksonException, JSONException {
 
         List<DruidDimension> searchDimensions
                 = Arrays.asList(new SimpleDimension("dim1"), new SimpleDimension("dim2"));
@@ -111,7 +113,7 @@ public class DruidSearchQueryTest {
     }
 
     @Test
-    public void testRequiredFields() throws JsonProcessingException, JSONException {
+    public void testRequiredFields() throws JacksonException, JSONException {
 
         SearchQuerySpec searchQuerySpec = new InsensitiveContainsSearchQuerySpec("Ke");
 
@@ -149,7 +151,7 @@ public class DruidSearchQueryTest {
     }
 
     @Test
-    public void testAllFields() throws JsonProcessingException, JSONException {
+    public void testAllFields() throws JacksonException, JSONException {
 
         List<DruidDimension> searchDimensions
                 = Arrays.asList(new SimpleDimension("dim1"), new SimpleDimension("dim2"));

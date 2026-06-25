@@ -16,8 +16,8 @@
 
 package in.zapr.druid.druidry.query.select;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -39,16 +39,16 @@ import in.zapr.druid.druidry.granularity.SimpleGranularity;
 import in.zapr.druid.druidry.virtualColumn.ExpressionVirtualColumn;
 
 public class DruidSelectQueryTest {
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
     }
 
 
     @Test
-    public void testSampleQuery() throws JsonProcessingException, JSONException {
+    public void testSampleQuery() throws JacksonException, JSONException {
         DateTime startTime = new DateTime(2013, 1, 1, 0,
                 0, 0, DateTimeZone.UTC);
         DateTime endTime = new DateTime(2013, 1, 2, 0,
@@ -96,7 +96,7 @@ public class DruidSelectQueryTest {
     }
 
     @Test
-    public void testPagingQuery() throws JsonProcessingException, JSONException {
+    public void testPagingQuery() throws JacksonException, JSONException {
         DateTime startTime = new DateTime(2013, 1, 1, 0,
                 0, 0, DateTimeZone.UTC);
         DateTime endTime = new DateTime(2013, 1, 2, 0,

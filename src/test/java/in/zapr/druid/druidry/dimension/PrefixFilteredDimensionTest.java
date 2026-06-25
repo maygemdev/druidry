@@ -16,8 +16,8 @@
 
 package in.zapr.druid.druidry.dimension;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.json.JSONException;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -27,16 +27,16 @@ import org.testng.annotations.Test;
 
 public class PrefixFilteredDimensionTest {
 
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
     }
 
 
     @Test
-    public void testPreFixFilteredDimension() throws JsonProcessingException, JSONException {
+    public void testPreFixFilteredDimension() throws JacksonException, JSONException {
         DimensionSpec dimensionSpec = DefaultDimension.builder()
                 .dimension("system_label_values")
                 .outputName("system_label_values")
@@ -60,7 +60,7 @@ public class PrefixFilteredDimensionTest {
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void testPreFixFilteredDimensionWithNullDimensionSpec() throws JsonProcessingException {
+    public void testPreFixFilteredDimensionWithNullDimensionSpec() throws JacksonException {
         PrefixFilteredDimension prefixFilteredDimension = PrefixFilteredDimension.builder()
                 .prefix("compute.googleapis.com/cores")
                 .build();
@@ -68,7 +68,7 @@ public class PrefixFilteredDimensionTest {
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void testPreFixFilteredDimensionWithNullPrefix() throws JsonProcessingException {
+    public void testPreFixFilteredDimensionWithNullPrefix() throws JacksonException {
         DimensionSpec dimensionSpec = DefaultDimension.builder()
                 .dimension("system_label_values")
                 .outputName("system_label_values")

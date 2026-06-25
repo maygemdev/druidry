@@ -16,8 +16,8 @@
 
 package in.zapr.druid.druidry.limitSpec;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,15 +35,15 @@ import in.zapr.druid.druidry.limitSpec.orderByColumnSpec.OrderByColumnSpecString
 
 public class DefaultLimitSpecTest {
 
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
     }
 
     @Test
-    public void testDefaultLimitSpecWithColumnName() throws JSONException, JsonProcessingException {
+    public void testDefaultLimitSpecWithColumnName() throws JSONException, JacksonException {
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("type", "default");
@@ -59,7 +59,7 @@ public class DefaultLimitSpecTest {
     }
 
     @Test
-    public void testDefaultLimitSpecWithColumnSpecMap() throws JSONException, JsonProcessingException {
+    public void testDefaultLimitSpecWithColumnSpecMap() throws JSONException, JacksonException {
 
         String dimension = "dim";
         OrderByColumnSpecMap orderByColumnSpecMap

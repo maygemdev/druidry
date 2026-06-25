@@ -17,8 +17,9 @@
 package in.zapr.druid.druidry.query.aggregation;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.cfg.DateTimeFeature;
+import tools.jackson.databind.json.JsonMapper;
 import in.zapr.druid.druidry.aggregator.CountAggregator;
 import in.zapr.druid.druidry.aggregator.DoubleSumAggregator;
 import in.zapr.druid.druidry.aggregator.DruidAggregator;
@@ -52,17 +53,19 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class TimeSeriesTest {
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(Include.NON_EMPTY);
-        objectMapper.configure(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        objectMapper = JsonMapper.builder()
+                .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(Include.NON_EMPTY)
+                        .withContentInclusion(Include.NON_EMPTY))
+                .configure(DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+                .build();
     }
 
     @Test
-    public void testSampleQuery() throws JsonProcessingException, JSONException {
+    public void testSampleQuery() throws JacksonException, JSONException {
 
         SelectorFilter selectorFilter2 = new SelectorFilter("sample_dimension2",
                 "sample_value2");
@@ -154,7 +157,7 @@ public class TimeSeriesTest {
     }
 
     @Test
-    public void testRequiredFields() throws JsonProcessingException, JSONException {
+    public void testRequiredFields() throws JacksonException, JSONException {
         DateTime startTime = new DateTime(2013, 7, 14, 0, 0, 0, DateTimeZone.UTC);
         DateTime endTime = new DateTime(2013, 11, 16, 0, 0, 0, DateTimeZone.UTC);
         Interval interval = new Interval(startTime, endTime);
@@ -187,7 +190,7 @@ public class TimeSeriesTest {
     }
 
     @Test
-    public void testAllFields() throws JSONException, JsonProcessingException {
+    public void testAllFields() throws JSONException, JacksonException {
         DateTime startTime = new DateTime(2013, 7, 14, 0, 0, 0, DateTimeZone.UTC);
         DateTime endTime = new DateTime(2013, 11, 16, 0, 0, 0, DateTimeZone.UTC);
         Interval interval = new Interval(startTime, endTime);

@@ -16,8 +16,8 @@
 
 package in.zapr.druid.druidry.extensions.datasketches.postAggregator;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,14 +33,14 @@ import in.zapr.druid.druidry.postAggregator.FieldAccessPostAggregator;
 
 public class TupleSketchTTestPostAggregatorTest {
 
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     private FieldAccessPostAggregator milkyWay;
     private FieldAccessPostAggregator andromeda;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
         milkyWay = new FieldAccessPostAggregator("MilkyWay");
         andromeda = new FieldAccessPostAggregator("Andromeda");
     }
@@ -62,7 +62,7 @@ public class TupleSketchTTestPostAggregatorTest {
     }
 
     @Test
-    public void testAllFields() throws JsonProcessingException, JSONException {
+    public void testAllFields() throws JacksonException, JSONException {
 
         TupleSketchTTestPostAggregator tupleSketchTTestPostAggregator =
                 TupleSketchTTestPostAggregator.builder()

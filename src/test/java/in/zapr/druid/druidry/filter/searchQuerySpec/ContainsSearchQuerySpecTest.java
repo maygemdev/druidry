@@ -16,8 +16,8 @@
 
 package in.zapr.druid.druidry.filter.searchQuerySpec;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,15 +28,15 @@ import org.testng.annotations.Test;
 
 public class ContainsSearchQuerySpecTest {
 
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
     }
 
     @Test
-    public void testAllFields() throws JSONException, JsonProcessingException {
+    public void testAllFields() throws JSONException, JacksonException {
         ContainsSearchQuerySpec spec = new ContainsSearchQuerySpec("Hello", true);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("type", "contains");
@@ -49,7 +49,7 @@ public class ContainsSearchQuerySpecTest {
     }
 
     @Test
-    public void testRequiredFields() throws JSONException, JsonProcessingException {
+    public void testRequiredFields() throws JSONException, JacksonException {
         ContainsSearchQuerySpec spec = new ContainsSearchQuerySpec("Hello");
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("type", "contains");
@@ -61,7 +61,7 @@ public class ContainsSearchQuerySpecTest {
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void testMissingValueField() throws JSONException, JsonProcessingException {
+    public void testMissingValueField() throws JSONException, JacksonException {
         ContainsSearchQuerySpec spec = new ContainsSearchQuerySpec(null);
     }
 }

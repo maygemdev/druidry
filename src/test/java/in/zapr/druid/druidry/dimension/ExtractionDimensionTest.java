@@ -16,8 +16,8 @@
 
 package in.zapr.druid.druidry.dimension;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.json.JSONException;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -31,15 +31,15 @@ import in.zapr.druid.druidry.extractionFunctions.ExtractionFunction;
 import in.zapr.druid.druidry.extractionFunctions.PartialExtractionFunction;
 
 public class ExtractionDimensionTest {
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
     }
 
     @Test
-    public void testSampleExtractionFunction() throws JSONException, JsonProcessingException {
+    public void testSampleExtractionFunction() throws JSONException, JacksonException {
 
         ExtractionFunction partialExtractionFunction = PartialExtractionFunction.builder()
                 .expr("abcd")
@@ -63,7 +63,7 @@ public class ExtractionDimensionTest {
     }
 
     @Test
-    public void testRequiredFields() throws JsonProcessingException, JSONException {
+    public void testRequiredFields() throws JacksonException, JSONException {
         ExtractionFunction partialExtractionFunction = PartialExtractionFunction.builder().expr("abcd").build();
 
         ExtractionDimension extractionDimension = ExtractionDimension.builder()

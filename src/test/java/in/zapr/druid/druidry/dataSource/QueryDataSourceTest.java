@@ -16,8 +16,8 @@
 
 package in.zapr.druid.druidry.dataSource;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 import in.zapr.druid.druidry.dimension.DruidDimension;
 import in.zapr.druid.druidry.dimension.SimpleDimension;
 import in.zapr.druid.druidry.granularity.Granularity;
@@ -39,15 +39,15 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class QueryDataSourceTest {
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
     }
 
     @Test
-    public void testQueryDataSource() throws JsonProcessingException, JSONException {
+    public void testQueryDataSource() throws JacksonException, JSONException {
         DruidDimension druidDimension1 = new SimpleDimension("dim1");
         DruidDimension druidDimension2 = new SimpleDimension("dim2");
 

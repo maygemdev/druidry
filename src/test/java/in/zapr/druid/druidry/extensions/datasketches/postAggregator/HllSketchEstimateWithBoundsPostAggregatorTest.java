@@ -16,8 +16,8 @@
 
 package in.zapr.druid.druidry.extensions.datasketches.postAggregator;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,13 +30,13 @@ import in.zapr.druid.druidry.postAggregator.FieldAccessPostAggregator;
 
 public class HllSketchEstimateWithBoundsPostAggregatorTest {
 
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     private FieldAccessPostAggregator starsHll;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
         starsHll = new FieldAccessPostAggregator("stars_hll");
     }
 
@@ -57,7 +57,7 @@ public class HllSketchEstimateWithBoundsPostAggregatorTest {
     }
 
     @Test
-    public void testAllFields() throws JsonProcessingException, JSONException {
+    public void testAllFields() throws JacksonException, JSONException {
 
         HllSketchEstimateWithBoundsPostAggregator hllSketchEstimateWithBoundsPostAggregator =
                 HllSketchEstimateWithBoundsPostAggregator.builder()
@@ -76,7 +76,7 @@ public class HllSketchEstimateWithBoundsPostAggregatorTest {
     }
 
     @Test
-    public void testRequiredFields() throws JsonProcessingException, JSONException {
+    public void testRequiredFields() throws JacksonException, JSONException {
 
         HllSketchEstimateWithBoundsPostAggregator hllSketchEstimateWithBoundsPostAggregator =
                 HllSketchEstimateWithBoundsPostAggregator.builder()

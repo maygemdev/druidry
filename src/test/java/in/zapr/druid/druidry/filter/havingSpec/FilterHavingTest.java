@@ -17,8 +17,8 @@
 package in.zapr.druid.druidry.filter.havingSpec;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 import in.zapr.druid.druidry.filter.SelectorFilter;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,16 +28,18 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class FilterHavingTest {
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(Include.NON_EMPTY);
+        objectMapper = JsonMapper.builder()
+                .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(Include.NON_EMPTY)
+                        .withContentInclusion(Include.NON_EMPTY))
+                .build();
     }
 
     @Test
-    public void testLongField() throws JSONException, JsonProcessingException {
+    public void testLongField() throws JSONException, JacksonException {
         HavingSpec filter = new FilterHaving(new SelectorFilter("Hello", 1488498926000L));
         JSONObject filterJsonObject = new JSONObject();
         filterJsonObject.put("type", "selector");
