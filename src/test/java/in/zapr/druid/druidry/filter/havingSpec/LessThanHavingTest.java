@@ -16,8 +16,8 @@
 
 package in.zapr.druid.druidry.filter.havingSpec;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,15 +27,15 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class LessThanHavingTest {
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
     }
 
     @Test
-    public void testAllFieldsNumeric() throws JSONException, JsonProcessingException {
+    public void testAllFieldsNumeric() throws JSONException, JacksonException {
         HavingSpec having = new LessThanHaving("count", 2);
 
         JSONObject jsonObject = new JSONObject();

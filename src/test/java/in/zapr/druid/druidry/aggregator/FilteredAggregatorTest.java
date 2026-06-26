@@ -17,8 +17,8 @@
 package in.zapr.druid.druidry.aggregator;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 import in.zapr.druid.druidry.filter.SelectorFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
@@ -31,16 +31,18 @@ import org.testng.annotations.Test;
 @Slf4j
 public class FilteredAggregatorTest {
 
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(Include.NON_EMPTY);
+        objectMapper = JsonMapper.builder()
+                .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(Include.NON_EMPTY)
+                        .withContentInclusion(Include.NON_EMPTY))
+                .build();
     }
 
     @Test
-    public void testAllFields() throws JsonProcessingException, JSONException {
+    public void testAllFields() throws JacksonException, JSONException {
 
         SelectorFilter filter = new SelectorFilter("dimension", "value");
         CountAggregator countAggregator = new CountAggregator("Shakespear");

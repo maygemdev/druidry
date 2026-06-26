@@ -16,8 +16,8 @@
 
 package in.zapr.druid.druidry.aggregator;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,15 +28,15 @@ import org.testng.annotations.Test;
 
 public class StringFirstAggregatorTest {
 
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
     }
 
     @Test
-    public void testRequiredFields() throws JsonProcessingException, JSONException {
+    public void testRequiredFields() throws JacksonException, JSONException {
         String name = "stringFirstNameRequired";
         String fieldName = "stringFirstFieldNameRequired";
 
@@ -56,7 +56,7 @@ public class StringFirstAggregatorTest {
     }
 
     @Test
-    public void testAllFields() throws JsonProcessingException, JSONException {
+    public void testAllFields() throws JacksonException, JSONException {
         String name = "stringFirstNameAll";
         String fieldName = "stringFirstFieldNameAll";
         int maxStringBytes = 300;

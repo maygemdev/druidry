@@ -16,8 +16,8 @@
 
 package in.zapr.druid.druidry.extensions.histogram.aggregator;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,15 +31,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class QuantilePostAggregatorTest {
 
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
     }
 
     @Test
-    public void testAllFields() throws JsonProcessingException, JSONException {
+    public void testAllFields() throws JacksonException, JSONException {
 
         QuantilePostAggregator quantilePostAgg = QuantilePostAggregator.builder().name("quantile")
                 .fieldName("timeAgg").probability(0.50F).build();
@@ -56,13 +56,13 @@ public class QuantilePostAggregatorTest {
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void testNullName() throws JsonProcessingException, JSONException {
+    public void testNullName() throws JacksonException, JSONException {
         QuantilePostAggregator quantilePostAgg =
                 QuantilePostAggregator.builder().name(null).fieldName("timeAgg").probability(0.50F).build();
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void testNullFieldName() throws JsonProcessingException, JSONException {
+    public void testNullFieldName() throws JacksonException, JSONException {
         QuantilePostAggregator quantilePostAgg = QuantilePostAggregator.builder().name("quantile")
                 .fieldName(null).probability(0.50F).build();
     }

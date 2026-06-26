@@ -16,8 +16,8 @@
 
 package in.zapr.druid.druidry.dataSource;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,16 +31,16 @@ import java.util.Arrays;
 import java.util.List;
 
 public class UnionDataSourceTest {
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
     }
 
 
     @Test
-    public void testUnionDataSource() throws JsonProcessingException, JSONException {
+    public void testUnionDataSource() throws JacksonException, JSONException {
         List<String> dataSourcesList = Arrays.asList("datasource_1", "datasource_2");
 
         UnionDataSource unionDataSource = new UnionDataSource(dataSourcesList);

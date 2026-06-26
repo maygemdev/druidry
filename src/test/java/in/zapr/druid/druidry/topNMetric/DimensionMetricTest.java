@@ -16,8 +16,8 @@
 
 package in.zapr.druid.druidry.topNMetric;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,11 +31,11 @@ import in.zapr.druid.druidry.query.config.SortingOrder;
 
 public class DimensionMetricTest {
 
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
     }
 
     private JSONObject getDimensionMetricJSON() throws JSONException {
@@ -46,7 +46,7 @@ public class DimensionMetricTest {
     }
 
     @Test
-    public void testAllFields() throws JsonProcessingException, JSONException {
+    public void testAllFields() throws JacksonException, JSONException {
 
         DimensionMetric dimensionMetric = DimensionMetric.builder()
                 .ordering(SortingOrder.LEXICOGRAPHIC)
@@ -63,7 +63,7 @@ public class DimensionMetricTest {
     }
 
     @Test
-    public void testRequiredFields() throws JsonProcessingException, JSONException {
+    public void testRequiredFields() throws JacksonException, JSONException {
 
         DimensionMetric dimensionMetric = DimensionMetric.builder()
                 .build();

@@ -17,8 +17,8 @@
 package in.zapr.druid.druidry.query.aggregation;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 import in.zapr.druid.druidry.aggregator.CountAggregator;
 import in.zapr.druid.druidry.aggregator.DoubleSumAggregator;
 import in.zapr.druid.druidry.aggregator.DruidAggregator;
@@ -60,16 +60,18 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class GroupByTest {
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(Include.NON_EMPTY);
+        objectMapper = JsonMapper.builder()
+                .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(Include.NON_EMPTY)
+                        .withContentInclusion(Include.NON_EMPTY))
+                .build();
     }
 
     @Test
-    public void testSampleQuery() throws JsonProcessingException, JSONException {
+    public void testSampleQuery() throws JacksonException, JSONException {
         String expectedJsonAsString = "{\n" +
                 "  \"queryType\": \"groupBy\",\n" +
                 "  \"dataSource\": {\n" +
@@ -170,7 +172,7 @@ public class GroupByTest {
     }
 
     @Test
-    public void testRequiredFields() throws JSONException, JsonProcessingException {
+    public void testRequiredFields() throws JSONException, JacksonException {
         DruidDimension druidDimension1 = new SimpleDimension("dim1");
         DruidDimension druidDimension2 = new SimpleDimension("dim2");
 
@@ -210,7 +212,7 @@ public class GroupByTest {
     }
 
     @Test
-    public void testAllFields() throws JSONException, JsonProcessingException {
+    public void testAllFields() throws JSONException, JacksonException {
         DruidDimension druidDimension1 = new SimpleDimension("dim1");
         DruidDimension druidDimension2 = new SimpleDimension("dim2");
 

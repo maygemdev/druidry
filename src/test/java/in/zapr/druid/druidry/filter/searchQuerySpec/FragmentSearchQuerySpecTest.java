@@ -16,8 +16,8 @@
 
 package in.zapr.druid.druidry.filter.searchQuerySpec;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,15 +32,15 @@ import java.util.List;
 
 public class FragmentSearchQuerySpecTest {
 
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
     }
 
     @Test
-    public void testAllFields() throws JSONException, JsonProcessingException {
+    public void testAllFields() throws JSONException, JacksonException {
 
         List<String> values = Arrays.asList("value1", "value2");
 
@@ -59,7 +59,7 @@ public class FragmentSearchQuerySpecTest {
     }
 
     @Test
-    public void testRequiredFields() throws JSONException, JsonProcessingException {
+    public void testRequiredFields() throws JSONException, JacksonException {
         List<String> values = Arrays.asList("value1", "value2");
 
         FragmentSearchQuerySpec spec = new FragmentSearchQuerySpec(values);
@@ -76,7 +76,7 @@ public class FragmentSearchQuerySpecTest {
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void testMissingValueField() throws JSONException, JsonProcessingException {
+    public void testMissingValueField() throws JSONException, JacksonException {
         FragmentSearchQuerySpec spec = new FragmentSearchQuerySpec(null);
     }
 }

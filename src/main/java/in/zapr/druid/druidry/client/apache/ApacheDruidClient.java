@@ -1,8 +1,5 @@
 package in.zapr.druid.druidry.client.apache;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import in.zapr.druid.druidry.client.DruidClient;
 import in.zapr.druid.druidry.client.DruidException;
 import in.zapr.druid.druidry.client.RuntimeIoException;
@@ -17,12 +14,17 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.ClassicHttpRequest;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpHeaders;
 import org.apache.hc.core5.http.HttpStatus;
 import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.support.ClassicRequestBuilder;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 public class ApacheDruidClient implements DruidClient {
 
@@ -41,7 +43,7 @@ public class ApacheDruidClient implements DruidClient {
     public ApacheDruidClient(String url, CloseableHttpClient http) {
         this.url = url;
         this.http = http;
-        jsonMapper = new ObjectMapper();
+        jsonMapper = JsonMapper.builder().build();
     }
 
     @Override
@@ -57,23 +59,19 @@ public class ApacheDruidClient implements DruidClient {
     public String query(DruidQuery query) {
         try {
             String body = jsonMapper.writeValueAsString(query);
+            int tryCount = 1;
             while (true) {
-                int tryCount = 1;
                 ClassicHttpRequest req = ClassicRequestBuilder.post(url)
                         .addHeader(HttpHeaders.ACCEPT, ContentType.APPLICATION_JSON.toString())
                         .setEntity(body, ContentType.APPLICATION_JSON)
                         .build();
-                // TODO: Replace deprecated execute() API usage.
-                try (CloseableHttpResponse resp = http.execute(req)) {
-                    switch (resp.getCode()) {
-                        case HttpStatus.SC_OK:
-                            return readResponse(resp);
-                        default:
-                            String respBody = readResponse(resp);
-                            if (tryCount == MAX_RETRY || !retryableException(respBody)) {
-                                throw new IOException(String.format("%d: %s.\n For request:\n %s", resp.getCode(), respBody, body));
-                            }
-                    }
+                HttpResult result = http.execute(req,
+                        response -> new HttpResult(response.getCode(), readResponse(response)));
+                if (result.code() == HttpStatus.SC_OK) {
+                    return result.body();
+                }
+                if (tryCount == MAX_RETRY || !retryableException(result.body())) {
+                    throw new IOException("%d: %s.\n For request:\n %s".formatted(result.code(), result.body(), body));
                 }
                 try {
                     Thread.sleep(tryCount == 1 ? 1000 : 5000);
@@ -93,7 +91,8 @@ public class ApacheDruidClient implements DruidClient {
     }
 
     @Override
-    public CloseableHttpResponse queryAsInputStream(String host, DruidQuery query) throws RuntimeIoException, DruidException {
+    public CloseableHttpResponse queryAsInputStream(String host, DruidQuery query)
+            throws RuntimeIoException, DruidException {
         try {
             URL baseUrl = new URL(url);
             return runQueryAsInputStream(baseUrl.getProtocol() + "://" + host + baseUrl.getPath(), query);
@@ -103,21 +102,23 @@ public class ApacheDruidClient implements DruidClient {
 
     }
 
-    private CloseableHttpResponse runQueryAsInputStream(String host, DruidQuery query) throws RuntimeIoException, DruidException {
+    // Returns an open response so the caller can stream the body; the response-handler
+    // execute() overloads close the response before returning and cannot be used here,
+    // and HttpClient 5 offers no non-deprecated alternative for an open response.
+    @SuppressWarnings("deprecation")
+    private CloseableHttpResponse runQueryAsInputStream(String host, DruidQuery query)
+            throws RuntimeIoException, DruidException {
         try {
             String body = jsonMapper.writeValueAsString(query);
             ClassicHttpRequest req = ClassicRequestBuilder.post(host)
                     .addHeader(HttpHeaders.ACCEPT, ContentType.APPLICATION_JSON.toString())
                     .setEntity(body, ContentType.APPLICATION_JSON)
                     .build();
-            // TODO: Replace deprecated execute() API usage.
             CloseableHttpResponse resp = http.execute(req);
-            switch (resp.getCode()) {
-                case HttpStatus.SC_OK:
-                    return resp;
-                default:
-                    throw new IOException(String.format("%d: %s.For request:\\n %s", resp.getCode(), readResponse(resp), body));
+            if (resp.getCode() == HttpStatus.SC_OK) {
+                return resp;
             }
+            throw new IOException(String.format("%d: %s.For request:\\n %s", resp.getCode(), readResponse(resp), body));
         } catch (IOException e) {
             throw new RuntimeIoException(e);
         }
@@ -126,18 +127,18 @@ public class ApacheDruidClient implements DruidClient {
     @Override
     public <T> List<T> query(DruidQuery query, Class<T> clazz) {
         try {
-            return jsonMapper.readValue(query(query), new TypeReference<List<T>>() {
+            return jsonMapper.readValue(query(query), new TypeReference<>() {
                 @Override
                 public Type getType() {
                     return TypeUtils.parameterize(List.class, clazz);
                 }
             });
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             throw new RuntimeIoException(e);
         }
     }
 
-    private static String readResponse(CloseableHttpResponse response) throws IOException {
+    private static String readResponse(ClassicHttpResponse response) throws IOException {
         try {
             return EntityUtils.toString(response.getEntity());
         } catch (ParseException e) {
@@ -146,6 +147,11 @@ public class ApacheDruidClient implements DruidClient {
     }
 
     private boolean retryableException(String body) {
-        return body != null && (body.contains("SegmentMissingException") || body.contains("missing segments") || body.contains("org.jboss.netty.channel.ChannelException"));
+        return body != null && (body.contains("SegmentMissingException") || body.contains("missing segments")
+                || body.contains("org.jboss.netty.channel.ChannelException"));
+    }
+
+    private record HttpResult(int code, String body) {
+
     }
 }

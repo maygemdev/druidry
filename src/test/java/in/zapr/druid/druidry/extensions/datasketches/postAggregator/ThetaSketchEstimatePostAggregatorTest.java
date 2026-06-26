@@ -16,8 +16,8 @@
 
 package in.zapr.druid.druidry.extensions.datasketches.postAggregator;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,11 +33,11 @@ import in.zapr.druid.druidry.postAggregator.FieldAccessPostAggregator;
 
 public class ThetaSketchEstimatePostAggregatorTest {
 
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
     }
 
     private JSONObject getFieldAccessJSON() throws JSONException {
@@ -49,7 +49,7 @@ public class ThetaSketchEstimatePostAggregatorTest {
     }
 
     @Test
-    public void testRequiredFieldsWithFieldAccess() throws JsonProcessingException, JSONException {
+    public void testRequiredFieldsWithFieldAccess() throws JacksonException, JSONException {
 
         FieldAccessPostAggregator fieldAccessPostAggregator =
                 new FieldAccessPostAggregator("stars");
@@ -72,7 +72,7 @@ public class ThetaSketchEstimatePostAggregatorTest {
     }
 
     @Test
-    public void testAllFieldsWithFieldAccess() throws JsonProcessingException, JSONException {
+    public void testAllFieldsWithFieldAccess() throws JacksonException, JSONException {
 
         FieldAccessPostAggregator fieldAccessPostAggregator =
                 new FieldAccessPostAggregator("stars");
@@ -96,7 +96,7 @@ public class ThetaSketchEstimatePostAggregatorTest {
     }
 
     @Test
-    public void testAllFieldsWithThetaSketchSetOp() throws JsonProcessingException, JSONException {
+    public void testAllFieldsWithThetaSketchSetOp() throws JacksonException, JSONException {
 
         FieldAccessPostAggregator fieldAccessPostAggregator =
                 new FieldAccessPostAggregator("stars");

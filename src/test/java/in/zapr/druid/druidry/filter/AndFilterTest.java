@@ -17,8 +17,8 @@
 package in.zapr.druid.druidry.filter;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 import java.util.Arrays;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,16 +31,18 @@ import org.testng.annotations.Test;
 
 public class AndFilterTest {
 
-    private static ObjectMapper objectMapper;
+    private static JsonMapper objectMapper;
 
     @BeforeClass
     public void init() {
-        objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(Include.NON_EMPTY);
+        objectMapper = JsonMapper.builder()
+                .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(Include.NON_EMPTY)
+                        .withContentInclusion(Include.NON_EMPTY))
+                .build();
     }
 
     @Test
-    public void testAllFields() throws JSONException, JsonProcessingException {
+    public void testAllFields() throws JSONException, JacksonException {
 
         SelectorFilter selectorFilter = new SelectorFilter("Hello", "World");
         SelectorFilter selectorFilter1 = new SelectorFilter("Peace", "Bro");
