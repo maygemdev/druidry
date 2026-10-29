@@ -84,4 +84,19 @@ public class DefaultLimitSpecTest {
         String actualJson = objectMapper.writeValueAsString(defaultLimitSpec);
         JSONAssert.assertEquals(actualJson, jsonObject, JSONCompareMode.NON_EXTENSIBLE);
     }
+
+    @Test
+    public void testDefaultLimitSpecWithoutLimit() throws JSONException, JacksonException {
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("type", "default");
+        JSONArray columns = new JSONArray(Collections.singleton("Tagore"));
+        jsonObject.put("columns", columns);
+
+        DefaultLimitSpec defaultLimitSpec = new DefaultLimitSpec(
+                Collections.singletonList(new OrderByColumnSpecString("Tagore")));
+
+        String actualJson = objectMapper.writeValueAsString(defaultLimitSpec);
+        JSONAssert.assertEquals(actualJson, jsonObject, JSONCompareMode.NON_EXTENSIBLE);
+    }
 }

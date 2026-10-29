@@ -16,6 +16,8 @@
 
 package in.zapr.druid.druidry.limitSpec;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.List;
 
 import in.zapr.druid.druidry.limitSpec.orderByColumnSpec.OrderByColumnSpec;
@@ -24,17 +26,24 @@ import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @EqualsAndHashCode
 public class DefaultLimitSpec {
     private static final String DEFAULT_LIMIT_SPEC_TYPE = "default";
 
     private String type;
-    private int limit;
+    private Integer limit;
     private List<OrderByColumnSpec> columns;
 
     public DefaultLimitSpec(int limit, @NonNull List<OrderByColumnSpec> columns) {
         this.type = DEFAULT_LIMIT_SPEC_TYPE;
         this.limit = limit;
+        this.columns = columns;
+    }
+
+    // Druid treats a missing limit as unlimited and still applies the ordering
+    public DefaultLimitSpec(@NonNull List<OrderByColumnSpec> columns) {
+        this.type = DEFAULT_LIMIT_SPEC_TYPE;
         this.columns = columns;
     }
 }
